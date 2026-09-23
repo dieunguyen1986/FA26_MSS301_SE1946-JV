@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="882a03bc-0f46-4826-89f6-60ce51c65e7b" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseLocalColorSettings">
+    <colors>
+      <entry key="8b0af660-83e5-4de6-9930-3a4479a3ecb8" value="" />
+    </colors>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0000000138970722" />
+      <entry key="S5" value="1.0011614938871831" />
+      <entry key="S10" value="1.0569985683129657" />
+      <entry key="S30" value="1.8169356040316442" />
+      <entry key="S60" value="2.8636022462674964" />
+      <entry key="M2" value="4.54126909165862" />
+      <entry key="M5" value="8.66274516687135" />
+      <entry key="M10" value="18.03580841381873" />
+      <entry key="M15" value="30.323661099984903" />
+      <entry key="M30" value="66.85612475739104" />
+      <entry key="H1" value="113.82209742637085" />
+      <entry key="H2" value="154.60078084769975" />
+      <entry key="H4" value="182.08954752059773" />
+      <entry key="D1" value="209.83445870553373" />
+      <entry key="W1" value="215.1056247112594" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="1.0736340968377269E-122" />
+      <entry key="S5" value="3.1001704509311602E-49" />
+      <entry key="S10" value="1.2707490622289598E-24" />
+      <entry key="S30" value="5.631524220293999E-8" />
+      <entry key="S60" value="0.0010484658799749676" />
+      <entry key="M2" value="0.1663331867083299" />
+      <entry key="M5" value="4.329371346160068" />
+      <entry key="M10" value="17.62731770004732" />
+      <entry key="M15" value="32.85487805113515" />
+      <entry key="M30" value="71.83812634848076" />
+      <entry key="H1" value="115.79781210516177" />
+      <entry key="H2" value="151.04340344878324" />
+      <entry key="H4" value="173.79005628857468" />
+      <entry key="D1" value="196.11396352167694" />
+      <entry key="W1" value="200.29279906296904" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.9592641193252643" />
+      <entry key="MS500" value="0.9917167307382933" />
+      <entry key="S2" value="0.9979227328493139" />
+      <entry key="S5" value="1.0003285464830516" />
+      <entry key="S10" value="1.0565458281235065" />
+      <entry key="S30" value="1.8166212631831913" />
+      <entry key="S60" value="2.864303479032158" />
+      <entry key="M2" value="4.704957231932626" />
+      <entry key="M5" value="12.968672056502825" />
+      <entry key="M10" value="35.61167720921672" />
+      <entry key="M15" value="63.112560772866225" />
+      <entry key="M30" value="138.6209065932996" />
+      <entry key="H1" value="229.56079306244345" />
+      <entry key="H2" value="305.60569217444805" />
+      <entry key="H4" value="355.85748291788155" />
+      <entry key="D1" value="405.9442657909682" />
+      <entry key="W1" value="415.39781744608575" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3JS2Ag0uXXwtLfMTCQmYzPuJgFu" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.job-service.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Spring Boot.JobServiceApplication.executor": "Run",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/dieunt/Documents/FPTU/1_Training/26_FA/MSS301_SE1946-JV/Projects/ats_parrent/services/candidate-service/src/main/resources",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "/Users/dieunt/Documents/FPTU/1_Training/26_FA/MSS301_SE1946-JV/Projects/ats_parrent/services/application-service/src/main/java/fu/ats/Main.java",
+    "to.speed.mode.migration.done": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/services/candidate-service/src/main/resources" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="Application" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="ats_parrent" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="ats_parrent" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JobServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="job-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="fu.ats.JobServiceApplication" />
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-63390994e64e-intellij.indexing.shared.core-IU-262.8665.337" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.8665.337" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="882a03bc-0f46-4826-89f6-60ce51c65e7b" name="Changes" comment="" />
+      <created>1789640008247</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1789640008247</updated>
+      <workItem from="1789640009262" duration="1150000" />
+      <workItem from="1789970576949" duration="7859000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/fu/he123456/Main.java</url>
+          <line>13</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
