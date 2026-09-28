@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: candidate-service
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: candidate-service
+              uri:
+              predicates:
+                - name: candidate
+                  args:
+                    Path:
+

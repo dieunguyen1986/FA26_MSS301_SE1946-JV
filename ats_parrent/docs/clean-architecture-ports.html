@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ports in Clean Architecture</title>
+  <style>
+    :root {
+      --ink: #17243b;
+      --muted: #59687f;
+      --line: #d8e0eb;
+      --paper: #ffffff;
+      --page: #eef3f8;
+      --blue: #2364aa;
+      --blue-soft: #e8f1fb;
+      --teal: #147d78;
+      --teal-soft: #e7f6f4;
+      --orange: #b7601c;
+      --orange-soft: #fff1e5;
+      --purple: #6946a5;
+      --purple-soft: #f1ebfb;
+      --shadow: 0 14px 34px rgba(23, 36, 59, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 48px 0 64px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.45fr 0.75fr;
+      gap: 32px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--blue);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 { line-height: 1.18; }
+
+    h1 {
+      max-width: 780px;
+      margin: 0;
+      font-size: clamp(2.3rem, 5vw, 4.6rem);
+      letter-spacing: -0.055em;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.45rem, 2vw, 2rem);
+      letter-spacing: -0.025em;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+
+    p { margin: 0 0 12px; }
+
+    .lede {
+      max-width: 720px;
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 1.13rem;
+    }
+
+    .learning-outcomes {
+      padding: 22px 24px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .learning-outcomes h2 {
+      margin-bottom: 12px;
+      font-size: 1.12rem;
+    }
+
+    .learning-outcomes ul,
+    .key-points ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .learning-outcomes li,
+    .key-points li { margin: 7px 0; }
+
+    .section {
+      margin-top: 28px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .section-intro {
+      max-width: 840px;
+      color: var(--muted);
+    }
+
+    .definition-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .example-grid,
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .definition-card,
+    .example-card,
+    .comparison-card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fbfcfe;
+    }
+
+    .definition-card.inbound { border-top: 5px solid var(--blue); }
+    .definition-card.outbound { border-top: 5px solid var(--teal); }
+    .definition-card.query { border-top: 5px solid var(--purple); }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .label.inbound { color: var(--blue); background: var(--blue-soft); }
+    .label.outbound { color: var(--teal); background: var(--teal-soft); }
+    .label.query { color: var(--purple); background: var(--purple-soft); }
+
+    .definition-card strong { color: var(--ink); }
+
+    .diagram-wrap {
+      margin-top: 24px;
+      padding: 16px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #f8fafc;
+    }
+
+    .diagram-wrap svg {
+      display: block;
+      width: 100%;
+      min-width: 920px;
+      height: auto;
+    }
+
+    .diagram-caption {
+      margin: 14px 4px 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+
+    .flow-note {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .flow-note div {
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: var(--muted);
+      background: #f7f9fc;
+      font-size: 0.92rem;
+    }
+
+    .flow-note strong { color: var(--ink); }
+
+    .code-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .code-card {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #111a2b;
+    }
+
+    .code-card h3 {
+      margin: 0;
+      padding: 13px 16px;
+      color: #e9eff8;
+      background: #1e2b43;
+      font-size: 0.92rem;
+    }
+
+    pre {
+      margin: 0;
+      padding: 18px;
+      overflow-x: auto;
+      color: #d9e5f4;
+      font: 0.84rem/1.65 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    code .keyword { color: #9ecbff; }
+    code .type { color: #a9e6c0; }
+    code .comment { color: #8c9ab0; }
+
+    .principle {
+      margin-top: 22px;
+      padding: 20px 22px;
+      border-left: 5px solid var(--orange);
+      border-radius: 0 14px 14px 0;
+      background: var(--orange-soft);
+    }
+
+    .principle p:last-child { margin-bottom: 0; }
+
+    .analogy {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 22px;
+      align-items: stretch;
+      margin-top: 22px;
+    }
+
+    .analogy-card {
+      padding: 22px;
+      border-radius: 16px;
+      background: var(--purple-soft);
+    }
+
+    .analogy-card p:last-child { margin-bottom: 0; }
+
+    .mapping {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    .mapping th,
+    .mapping td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .mapping th {
+      color: var(--muted);
+      background: #f7f9fc;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mapping tr:last-child td { border-bottom: 0; }
+
+    .mapping code,
+    .inline-code {
+      padding: 2px 5px;
+      border-radius: 5px;
+      color: var(--blue);
+      background: var(--blue-soft);
+      font: 0.9em "SFMono-Regular", Consolas, monospace;
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+      margin-top: 22px;
+    }
+
+    .key-points {
+      padding: 22px;
+      border-radius: 16px;
+      background: #f7f9fc;
+    }
+
+    .key-points li::marker { color: var(--blue); }
+
+    .footer-note {
+      margin-top: 30px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .diagram-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+      margin-top: 22px;
+    }
+
+    .diagram-figure {
+      margin: 0;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #f8fafc;
+    }
+
+    .diagram-figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .diagram-figure figcaption {
+      margin: 12px 4px 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+
+    .recommendation-list {
+      margin: 10px 0 0;
+      padding-left: 20px;
+    }
+
+    .recommendation-list li { margin: 7px 0; }
+
+    @media (max-width: 800px) {
+      .page { width: min(100% - 24px, 680px); padding-top: 28px; }
+      .hero,
+      .definition-grid,
+      .example-grid,
+      .comparison-grid,
+      .code-grid,
+      .analogy,
+      .two-column { grid-template-columns: 1fr; }
+      .section { padding: 22px 18px; }
+      .flow-note { grid-template-columns: 1fr; }
+      h1 { font-size: 2.65rem; }
+    }
+
+    @media (min-width: 801px) and (max-width: 980px) {
+      .definition-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Clean Architecture · Layered Style</p>
+        <h1>Understanding Inbound and Outbound Ports</h1>
+        <p class="lede">
+          Ports define the boundaries of the Application Layer. Commands and queries enter through use-case ports, while outbound ports let the application use external resources without becoming coupled to technical details.
+        </p>
+      </div>
+
+      <aside class="learning-outcomes" aria-label="Learning outcomes">
+        <h2>Learning outcomes</h2>
+        <ul>
+          <li>Distinguish inbound and outbound ports.</li>
+          <li>Place queries correctly in the Application Layer.</li>
+          <li>Trace a request through a use case.</li>
+          <li>Explain why dependencies point inward.</li>
+        </ul>
+      </aside>
+    </header>
+
+    <section class="section">
+      <h2>1. The central idea</h2>
+      <p class="section-intro">
+        In Clean Architecture, the Application Layer coordinates a business use case. A <strong>port</strong> is an interface that defines a boundary around that use case. The interface belongs to the layer that owns the business decision; an adapter supplies the technical implementation at the boundary.
+      </p>
+
+      <div class="definition-grid">
+        <article class="definition-card inbound">
+          <span class="label inbound">Inbound port · Input port</span>
+          <h3>How the system can be used</h3>
+          <p>
+            An inbound port is the public application-facing contract for a use case. A controller, message consumer, or scheduled job calls it to request an action.
+          </p>
+          <p><strong>Example:</strong> <span class="inline-code">ApplyForJobUseCase</span></p>
+        </article>
+
+        <article class="definition-card outbound">
+          <span class="label outbound">Outbound port · Output port</span>
+          <h3>What the use case needs</h3>
+          <p>
+            An outbound port is a contract for an external capability required by the use case. A persistence adapter, email adapter, or API client implements it.
+          </p>
+          <p><strong>Examples:</strong> <span class="inline-code">LoadJobPort</span>, <span class="inline-code">SaveApplicationPort</span></p>
+        </article>
+
+        <article class="definition-card query">
+          <span class="label query">Query · Read use case</span>
+          <h3>How the system provides information</h3>
+          <p>
+            A query requests information without intentionally changing business state. It is still an inbound use case and normally enters through <span class="inline-code">port.in</span>.
+          </p>
+          <p><strong>Example:</strong> <span class="inline-code">GetApplicationStatusUseCase</span></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>2. Query: a read-oriented use case</h2>
+      <p class="section-intro">
+        In CQRS terminology, a query is a request for information. It should not intentionally create, update, or delete business data. The word “query” may describe the input object, the use-case contract, or the handler; naming these roles explicitly keeps the design understandable.
+      </p>
+
+      <div class="flow-note">
+        <div><strong>Query object:</strong> Carries the criteria, such as an application ID.</div>
+        <div><strong>Inbound port:</strong> Defines how an external caller requests the read use case.</div>
+        <div><strong>Query service:</strong> Executes the read and returns a view or read model.</div>
+      </div>
+
+      <div class="code-grid">
+        <article class="code-card">
+          <h3>Query input and inbound port</h3>
+          <pre><code><span class="keyword">public record</span> <span class="type">GetApplicationStatusQuery</span>(
+        <span class="type">UUID</span> applicationId
+) {}
+
+<span class="keyword">public interface</span> <span class="type">GetApplicationStatusUseCase</span> {
+    <span class="type">ApplicationStatusView</span> get(
+        <span class="type">GetApplicationStatusQuery</span> query
+    );
+}</code></pre>
+        </article>
+
+        <article class="code-card">
+          <h3>Query service and outbound port</h3>
+          <pre><code><span class="keyword">public class</span> <span class="type">GetApplicationStatusService</span>
+        <span class="keyword">implements</span> <span class="type">GetApplicationStatusUseCase</span> {
+
+    <span class="keyword">private final</span> <span class="type">LoadApplicationStatusPort</span>
+        loadApplicationStatusPort;
+
+    <span class="comment">// Read data and return a view; do not change state.</span>
+}</code></pre>
+        </article>
+      </div>
+
+      <div class="principle">
+        <h3>Placement rule</h3>
+        <p>
+          A query is not an alternative to <span class="inline-code">port.in</span>. It is a read-oriented use case exposed by <span class="inline-code">port.in</span>. Its data source is accessed through an outbound port such as <span class="inline-code">LoadApplicationStatusPort</span>.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>3. A complete request flow</h2>
+      <p class="section-intro">
+        Consider an applicant submitting a CV for an open job. The controller starts the flow through an inbound port. The application service performs the business coordination, then uses outbound ports to obtain and persist data.
+      </p>
+
+      <figure class="diagram-wrap">
+        <svg viewBox="0 0 1200 620" role="img" aria-labelledby="diagram-title diagram-description">
+          <title id="diagram-title">Request flow through inbound and outbound ports</title>
+          <desc id="diagram-description">A REST controller calls an inbound port. The application service implements that port and calls an outbound port. A JPA persistence adapter implements the outbound port and communicates with the database.</desc>
+
+          <defs>
+            <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#2364aa"></path>
+            </marker>
+            <marker id="arrow-teal" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#147d78"></path>
+            </marker>
+            <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#b7601c"></path>
+            </marker>
+          </defs>
+
+          <rect x="18" y="20" width="1164" height="580" rx="20" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"></rect>
+          <rect x="274" y="82" width="610" height="404" rx="24" fill="#f4f8fc" stroke="#2364aa" stroke-width="2" stroke-dasharray="10 8"></rect>
+          <text x="304" y="119" fill="#2364aa" font-size="18" font-weight="700" letter-spacing="1">APPLICATION LAYER</text>
+          <text x="304" y="145" fill="#59687f" font-size="15">Owns use-case contracts and business orchestration</text>
+
+          <rect x="48" y="232" width="190" height="126" rx="16" fill="#f1ebfb" stroke="#6946a5" stroke-width="2"></rect>
+          <text x="143" y="266" text-anchor="middle" fill="#6946a5" font-size="16" font-weight="700">PRIMARY ADAPTER</text>
+          <text x="143" y="296" text-anchor="middle" fill="#17243b" font-size="19" font-weight="700">REST Controller</text>
+          <text x="143" y="326" text-anchor="middle" fill="#59687f" font-size="14">Receives HTTP request</text>
+
+          <rect x="328" y="232" width="190" height="126" rx="16" fill="#e8f1fb" stroke="#2364aa" stroke-width="2"></rect>
+          <text x="423" y="266" text-anchor="middle" fill="#2364aa" font-size="16" font-weight="700">INBOUND PORT</text>
+          <text x="423" y="296" text-anchor="middle" fill="#17243b" font-size="18" font-weight="700">ApplyForJobUseCase</text>
+          <text x="423" y="326" text-anchor="middle" fill="#59687f" font-size="14">Defines the use case API</text>
+
+          <rect x="570" y="232" width="222" height="126" rx="16" fill="#ffffff" stroke="#17243b" stroke-width="2"></rect>
+          <text x="681" y="266" text-anchor="middle" fill="#17243b" font-size="16" font-weight="700">APPLICATION SERVICE</text>
+          <text x="681" y="296" text-anchor="middle" fill="#17243b" font-size="18" font-weight="700">ApplyForJobService</text>
+          <text x="681" y="326" text-anchor="middle" fill="#59687f" font-size="14">Coordinates business rules</text>
+
+          <rect x="844" y="232" width="190" height="126" rx="16" fill="#e7f6f4" stroke="#147d78" stroke-width="2"></rect>
+          <text x="939" y="266" text-anchor="middle" fill="#147d78" font-size="16" font-weight="700">OUTBOUND PORT</text>
+          <text x="939" y="296" text-anchor="middle" fill="#17243b" font-size="18" font-weight="700">SaveApplicationPort</text>
+          <text x="939" y="326" text-anchor="middle" fill="#59687f" font-size="14">Requests persistence</text>
+
+          <rect x="1010" y="424" width="142" height="112" rx="16" fill="#fff1e5" stroke="#b7601c" stroke-width="2"></rect>
+          <text x="1081" y="456" text-anchor="middle" fill="#b7601c" font-size="14" font-weight="700">SECONDARY ADAPTER</text>
+          <text x="1081" y="484" text-anchor="middle" fill="#17243b" font-size="17" font-weight="700">JPA Adapter</text>
+          <text x="1081" y="510" text-anchor="middle" fill="#59687f" font-size="13">Technical implementation</text>
+
+          <rect x="528" y="424" width="250" height="112" rx="16" fill="#fff1e5" stroke="#b7601c" stroke-width="2"></rect>
+          <text x="653" y="458" text-anchor="middle" fill="#b7601c" font-size="14" font-weight="700">EXTERNAL RESOURCE</text>
+          <text x="653" y="488" text-anchor="middle" fill="#17243b" font-size="19" font-weight="700">Database</text>
+          <text x="653" y="514" text-anchor="middle" fill="#59687f" font-size="13">MySQL, PostgreSQL, or another store</text>
+
+          <line x1="238" y1="295" x2="320" y2="295" stroke="#2364aa" stroke-width="3" marker-end="url(#arrow-blue)"></line>
+          <text x="279" y="278" text-anchor="middle" fill="#2364aa" font-size="13" font-weight="700">calls</text>
+
+          <line x1="518" y1="295" x2="562" y2="295" stroke="#2364aa" stroke-width="3" marker-end="url(#arrow-blue)"></line>
+          <text x="540" y="278" text-anchor="middle" fill="#2364aa" font-size="13" font-weight="700">invokes</text>
+
+          <line x1="792" y1="295" x2="836" y2="295" stroke="#147d78" stroke-width="3" marker-end="url(#arrow-teal)"></line>
+          <text x="814" y="278" text-anchor="middle" fill="#147d78" font-size="13" font-weight="700">calls</text>
+
+          <path d="M 939 358 C 939 392, 1050 385, 1072 416" fill="none" stroke="#b7601c" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#arrow-orange)"></path>
+          <text x="1000" y="392" text-anchor="middle" fill="#b7601c" font-size="13" font-weight="700">implemented by</text>
+
+          <path d="M 1010 480 C 946 480, 855 480, 786 480" fill="none" stroke="#b7601c" stroke-width="3" marker-end="url(#arrow-orange)"></path>
+          <text x="898" y="463" text-anchor="middle" fill="#b7601c" font-size="13" font-weight="700">reads / writes</text>
+
+          <path d="M 681 232 C 681 186, 450 186, 423 224" fill="none" stroke="#b7601c" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#arrow-orange)"></path>
+          <text x="548" y="181" text-anchor="middle" fill="#b7601c" font-size="13" font-weight="700">implements</text>
+
+          <line x1="54" y1="570" x2="94" y2="570" stroke="#2364aa" stroke-width="3" marker-end="url(#arrow-blue)"></line>
+          <text x="108" y="575" fill="#59687f" font-size="13">Runtime call</text>
+          <line x1="236" y1="570" x2="276" y2="570" stroke="#b7601c" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#arrow-orange)"></line>
+          <text x="290" y="575" fill="#59687f" font-size="13">Implementation relationship</text>
+        </svg>
+        <figcaption class="diagram-caption">
+          The application depends on abstractions; technical adapters depend on those abstractions and provide the implementation.
+        </figcaption>
+      </figure>
+
+      <div class="flow-note">
+        <div><strong>Inbound:</strong> “What can an external actor ask the application to do?”</div>
+        <div><strong>Application:</strong> “What business decisions coordinate the use case?”</div>
+        <div><strong>Outbound:</strong> “What external capability does the use case require?”</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>4. Example: applying for a job</h2>
+      <p class="section-intro">
+        The following example separates the use-case contract from the technical details of HTTP and persistence. The Application Layer can therefore be tested with simple test doubles instead of a running database.
+      </p>
+
+      <div class="code-grid">
+        <article class="code-card">
+          <h3>Inbound port: the use-case contract</h3>
+          <pre><code><span class="keyword">public interface</span> <span class="type">ApplyForJobUseCase</span> {
+
+    <span class="type">ApplicationResult</span> apply(
+        <span class="type">ApplyForJobCommand</span> command
+    );
+
+    <span class="keyword">record</span> <span class="type">ApplyForJobCommand</span>(
+        <span class="type">UUID</span> candidateId,
+        <span class="type">UUID</span> jobId,
+        <span class="type">String</span> cvUrl
+    ) {}
+}</code></pre>
+        </article>
+
+        <article class="code-card">
+          <h3>Outbound ports: required capabilities</h3>
+          <pre><code><span class="keyword">public interface</span> <span class="type">LoadJobPort</span> {
+    <span class="type">Optional&lt;Job&gt;</span> findById(<span class="type">UUID</span> jobId);
+}
+
+<span class="keyword">public interface</span> <span class="type">SaveApplicationPort</span> {
+    <span class="type">JobApplication</span> save(
+        <span class="type">JobApplication</span> application
+    );
+}
+
+<span class="comment">// Implemented by infrastructure adapters.</span></code></pre>
+        </article>
+      </div>
+
+      <div class="code-grid">
+        <article class="code-card">
+          <h3>Application service: business orchestration</h3>
+          <pre><code><span class="keyword">public class</span> <span class="type">ApplyForJobService</span>
+        <span class="keyword">implements</span> <span class="type">ApplyForJobUseCase</span> {
+
+    <span class="keyword">private final</span> <span class="type">LoadJobPort</span> loadJobPort;
+    <span class="keyword">private final</span> <span class="type">SaveApplicationPort</span>
+        saveApplicationPort;
+
+    <span class="comment">// Validate job, create application, save result.</span>
+}</code></pre>
+        </article>
+
+        <article class="code-card">
+          <h3>Adapter: technical implementation</h3>
+          <pre><code><span class="keyword">public class</span> <span class="type">ApplicationPersistenceAdapter</span>
+        <span class="keyword">implements</span> <span class="type">SaveApplicationPort</span> {
+
+    <span class="keyword">private final</span> <span class="type">ApplicationJpaRepository</span>
+        repository;
+
+    <span class="comment">// Translate domain object to JPA entity.</span>
+    <span class="comment">// Delegate persistence to the repository.</span>
+}</code></pre>
+        </article>
+      </div>
+
+      <div class="principle">
+        <h3>Important design rule</h3>
+        <p>
+          The Application Service depends on <span class="inline-code">SaveApplicationPort</span>, not on <span class="inline-code">JpaRepository</span>. The database adapter depends on the port and implements it. This is Dependency Inversion in practice.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>5. Responsibility mapping</h2>
+      <div class="two-column">
+        <div class="key-points">
+          <h3>How to identify a port</h3>
+          <ul>
+            <li>If an external actor starts a business action, define an inbound port.</li>
+            <li>If a use case needs a database, service, file system, or API, define an outbound port.</li>
+            <li>Place port interfaces in the Application Layer.</li>
+            <li>Place implementation details in adapters or Infrastructure.</li>
+            <li>Keep business rules in the Domain and orchestration in the Application Service.</li>
+          </ul>
+        </div>
+
+        <table class="mapping">
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Responsibility</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Inbound port</td>
+              <td>Expose a use case</td>
+              <td><code>ApplyForJobUseCase</code></td>
+            </tr>
+            <tr>
+              <td>Application service</td>
+              <td>Coordinate the use case</td>
+              <td><code>ApplyForJobService</code></td>
+            </tr>
+            <tr>
+              <td>Query</td>
+              <td>Request information without changing state</td>
+              <td><code>GetApplicationStatusQuery</code></td>
+            </tr>
+            <tr>
+              <td>Query service</td>
+              <td>Execute a read use case</td>
+              <td><code>GetApplicationStatusService</code></td>
+            </tr>
+            <tr>
+              <td>Outbound port</td>
+              <td>Describe a required capability</td>
+              <td><code>SaveApplicationPort</code></td>
+            </tr>
+            <tr>
+              <td>Primary adapter</td>
+              <td>Drive the application</td>
+              <td>REST controller</td>
+            </tr>
+            <tr>
+              <td>Secondary adapter</td>
+              <td>Implement an external capability</td>
+              <td>JPA persistence adapter</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>6. A practical analogy</h2>
+      <div class="analogy">
+        <article class="analogy-card">
+          <h3>Electrical socket analogy</h3>
+          <p>
+            A wall socket defines a standard interface. A device uses the socket without knowing how electricity is generated. The socket is comparable to a port; the plug and power station are comparable to adapters and external infrastructure.
+          </p>
+        </article>
+        <article class="comparison-card">
+          <h3>Applied to the application example</h3>
+          <table class="mapping">
+            <tbody>
+              <tr>
+                <td>Socket used by a device</td>
+                <td><strong>Outbound port:</strong> <code>SaveApplicationPort</code></td>
+              </tr>
+              <tr>
+                <td>Device asking for an action</td>
+                <td><strong>Inbound caller:</strong> REST controller</td>
+              </tr>
+              <tr>
+                <td>Device’s internal behavior</td>
+                <td><strong>Application service:</strong> use-case coordination</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>7. Reference architecture diagrams</h2>
+      <p class="section-intro">
+        The first figure explains the Clean Architecture dependency direction. The second applies that direction to the candidate service package structure, including commands, queries, outbound ports, persistence entities, and infrastructure adapters.
+      </p>
+
+      <div class="diagram-grid">
+        <figure class="diagram-figure">
+          <img src="clean-architecture-overview.svg" alt="Clean Architecture layered view with interface adapters, application layer, domain layer, and infrastructure.">
+          <figcaption>Figure 1. The domain remains the stable core; infrastructure implements application-owned contracts.</figcaption>
+        </figure>
+
+        <figure class="diagram-figure">
+          <img src="candidate-service-package-diagram.svg" alt="UML-style package diagram for a candidate service with api, application, domain, infrastructure, and config packages.">
+          <figcaption>Figure 2. Recommended candidate-service package diagram. Domain has no entity package; persistence entities belong to infrastructure.</figcaption>
+        </figure>
+      </div>
+
+      <div class="principle">
+        <h3>Recommended package decisions</h3>
+        <ul class="recommendation-list">
+          <li>Keep aggregate roots and their invariants in <span class="inline-code">domain/aggregate</span>; do not create a duplicate <span class="inline-code">domain/entity</span> package.</li>
+          <li>Place JPA or database-shaped models in <span class="inline-code">infrastructure/persistence/entity</span> and convert them through a persistence mapper.</li>
+          <li>Do not duplicate the same repository contract in both <span class="inline-code">domain/repository</span> and <span class="inline-code">application/port/out</span>. Use <span class="inline-code">port/out</span> for use-case-driven persistence; keep a domain repository only when the domain itself requires that abstraction.</li>
+          <li>Keep DTO mapping close to its boundary: API DTO mapping in <span class="inline-code">api</span>, persistence mapping in <span class="inline-code">infrastructure</span>.</li>
+          <li>Add <span class="inline-code">saga</span> and <span class="inline-code">event.handler</span> only when the workflow is asynchronous, distributed, or long-running; they are not mandatory in every service.</li>
+        </ul>
+      </div>
+    </section>
+
+    <p class="footer-note">
+      Summary: commands change state, queries read state, inbound ports expose use cases, and outbound ports describe the capabilities the application needs.
+    </p>
+  </main>
+</body>
+</html>

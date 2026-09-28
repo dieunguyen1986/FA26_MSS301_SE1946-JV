@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 960" role="img" aria-labelledby="title description">
+  <title id="title">Clean Architecture overview</title>
+  <desc id="description">A layered Clean Architecture diagram showing external actors, interface adapters, the application layer, the domain layer, infrastructure, and inward dependency direction.</desc>
+  <defs>
+    <marker id="runtime-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#2364aa"/>
+    </marker>
+    <marker id="dependency-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12" fill="none" stroke="#b7601c" stroke-width="2"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#17243b" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="960" fill="#eef3f8"/>
+  <text x="800" y="66" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="32" font-weight="700">Clean Architecture — Layered View</text>
+  <text x="800" y="98" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="17">Business rules stay at the center; technical details remain replaceable at the boundary.</text>
+
+  <rect x="60" y="140" width="1480" height="720" rx="38" fill="#ffffff" stroke="#c8d3e1" stroke-width="3" filter="url(#shadow)"/>
+  <text x="96" y="184" fill="#59687f" font-family="Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="2">OUTER BOUNDARY — FRAMEWORKS, DRIVERS, AND EXTERNAL SYSTEMS</text>
+
+  <rect x="96" y="222" width="310" height="536" rx="24" fill="#f1ebfb" stroke="#6946a5" stroke-width="3"/>
+  <text x="251" y="264" text-anchor="middle" fill="#6946a5" font-family="Arial, sans-serif" font-size="22" font-weight="700">Interface Adapters</text>
+  <text x="251" y="293" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="15">Translate external input and output</text>
+  <rect x="132" y="336" width="238" height="90" rx="14" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+  <text x="251" y="371" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="18" font-weight="700">REST Controller</text>
+  <text x="251" y="399" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="14">Primary adapter</text>
+  <rect x="132" y="460" width="238" height="90" rx="14" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+  <text x="251" y="495" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="18" font-weight="700">Message Consumer</text>
+  <text x="251" y="523" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="14">Event-driven entry point</text>
+  <text x="251" y="632" text-anchor="middle" fill="#6946a5" font-family="Arial, sans-serif" font-size="15" font-weight="700">API / DTO / Mapping</text>
+
+  <rect x="444" y="222" width="702" height="536" rx="24" fill="#e8f1fb" stroke="#2364aa" stroke-width="3"/>
+  <text x="795" y="264" text-anchor="middle" fill="#2364aa" font-family="Arial, sans-serif" font-size="22" font-weight="700">Application Layer</text>
+  <text x="795" y="293" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="15">Use cases, orchestration, and ports</text>
+
+  <rect x="480" y="336" width="190" height="92" rx="14" fill="#ffffff" stroke="#2364aa" stroke-width="2"/>
+  <text x="575" y="371" text-anchor="middle" fill="#2364aa" font-family="Arial, sans-serif" font-size="17" font-weight="700">port.in</text>
+  <text x="575" y="400" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="14">Commands and queries</text>
+  <rect x="700" y="336" width="190" height="92" rx="14" fill="#ffffff" stroke="#2364aa" stroke-width="2"/>
+  <text x="795" y="371" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="17" font-weight="700">Use-case Service</text>
+  <text x="795" y="400" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="14">Business orchestration</text>
+  <rect x="920" y="336" width="190" height="92" rx="14" fill="#ffffff" stroke="#147d78" stroke-width="2"/>
+  <text x="1015" y="371" text-anchor="middle" fill="#147d78" font-family="Arial, sans-serif" font-size="17" font-weight="700">port.out</text>
+  <text x="1015" y="400" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="14">Required capabilities</text>
+  <rect x="584" y="492" width="422" height="104" rx="14" fill="#ffffff" stroke="#6946a5" stroke-width="2"/>
+  <text x="795" y="532" text-anchor="middle" fill="#6946a5" font-family="Arial, sans-serif" font-size="18" font-weight="700">Saga / Event Handler</text>
+  <text x="795" y="562" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="14">Coordinates long-running or event-driven workflows</text>
+  <text x="795" y="679" text-anchor="middle" fill="#2364aa" font-family="Arial, sans-serif" font-size="15" font-weight="700">Application owns the contracts</text>
+
+  <rect x="1184" y="222" width="310" height="536" rx="24" fill="#fff1e5" stroke="#b7601c" stroke-width="3"/>
+  <text x="1339" y="264" text-anchor="middle" fill="#b7601c" font-family="Arial, sans-serif" font-size="22" font-weight="700">Infrastructure</text>
+  <text x="1339" y="293" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="15">Implements external details</text>
+  <rect x="1220" y="336" width="238" height="90" rx="14" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+  <text x="1339" y="371" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="18" font-weight="700">Persistence Adapter</text>
+  <text x="1339" y="399" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="14">JPA / SQL / NoSQL</text>
+  <rect x="1220" y="460" width="238" height="90" rx="14" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+  <text x="1339" y="495" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="18" font-weight="700">Messaging Adapter</text>
+  <text x="1339" y="523" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="14">Kafka / RabbitMQ / Email</text>
+  <text x="1339" y="632" text-anchor="middle" fill="#b7601c" font-family="Arial, sans-serif" font-size="15" font-weight="700">Persistence Entity / Repository</text>
+
+  <rect x="96" y="790" width="1398" height="54" rx="14" fill="#f7f9fc" stroke="#d8e0eb" stroke-width="2"/>
+  <text x="795" y="824" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="16" font-weight="700">Domain Layer — the stable core</text>
+  <text x="795" y="846" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="13">Aggregate roots · value objects · domain events · invariants</text>
+
+  <line x1="406" y1="380" x2="472" y2="380" stroke="#2364aa" stroke-width="4" marker-end="url(#runtime-arrow)"/>
+  <line x1="670" y1="380" x2="692" y2="380" stroke="#2364aa" stroke-width="4" marker-end="url(#runtime-arrow)"/>
+  <line x1="890" y1="380" x2="912" y2="380" stroke="#147d78" stroke-width="4" marker-end="url(#runtime-arrow)"/>
+  <line x1="1110" y1="380" x2="1212" y2="380" stroke="#147d78" stroke-width="4" marker-end="url(#runtime-arrow)"/>
+  <text x="439" y="362" text-anchor="middle" fill="#2364aa" font-family="Arial, sans-serif" font-size="13" font-weight="700">calls</text>
+  <text x="901" y="362" text-anchor="middle" fill="#147d78" font-family="Arial, sans-serif" font-size="13" font-weight="700">uses</text>
+
+  <line x1="1339" y1="336" x2="1050" y2="314" stroke="#b7601c" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#dependency-arrow)"/>
+  <text x="1193" y="306" text-anchor="middle" fill="#b7601c" font-family="Arial, sans-serif" font-size="13" font-weight="700">implements port.out</text>
+  <line x1="251" y1="336" x2="575" y2="314" stroke="#b7601c" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#dependency-arrow)"/>
+  <text x="414" y="304" text-anchor="middle" fill="#b7601c" font-family="Arial, sans-serif" font-size="13" font-weight="700">depends on port.in</text>
+
+  <line x1="54" y1="908" x2="94" y2="908" stroke="#2364aa" stroke-width="4" marker-end="url(#runtime-arrow)"/>
+  <text x="108" y="914" fill="#59687f" font-family="Arial, sans-serif" font-size="14">Runtime interaction</text>
+  <line x1="300" y1="908" x2="340" y2="908" stroke="#b7601c" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#dependency-arrow)"/>
+  <text x="354" y="914" fill="#59687f" font-family="Arial, sans-serif" font-size="14">Compile-time dependency / implementation</text>
+</svg>

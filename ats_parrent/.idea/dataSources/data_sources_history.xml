@@ -22,10 +22,11 @@
             <node kind="database" qname="@">
               <node kind="schema" qname="@" />
             </node>
-            <node kind="database" qname="job_sdb">
+            <node kind="database">
+              <name qname="candidate_sdb" />
+              <name qname="job_sdb" />
               <node kind="schema" qname="public" />
             </node>
-            <node kind="database" qname="candidate_sdb" />
           </node>
         </introspection-scope>
       </schema-mapping>

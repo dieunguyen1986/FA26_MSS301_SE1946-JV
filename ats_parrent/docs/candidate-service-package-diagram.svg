@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1040" role="img" aria-labelledby="title description">
+  <title id="title">Candidate service UML package diagram</title>
+  <desc id="description">A UML-style package diagram for a candidate service, showing API, application, domain, infrastructure, and configuration packages. The domain package has no entity subpackage; persistence entities are placed under infrastructure.persistence.entity.</desc>
+  <defs>
+    <marker id="dependency-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12" fill="none" stroke="#59687f" stroke-width="2"/>
+    </marker>
+    <marker id="implementation-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12" fill="none" stroke="#b7601c" stroke-width="2"/>
+    </marker>
+    <marker id="event-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#147d78"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#17243b" flood-opacity="0.11"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="1040" fill="#eef3f8"/>
+  <text x="800" y="52" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="30" font-weight="700">Candidate Service — UML Package Diagram</text>
+  <text x="800" y="83" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="16">Recommended package boundaries for Clean Architecture with CQRS-style commands and queries</text>
+
+  <rect x="36" y="108" width="1528" height="860" rx="24" fill="#ffffff" stroke="#c8d3e1" stroke-width="3" filter="url(#shadow)"/>
+  <path d="M 36 142 Q 36 108 70 108 L 340 108 L 340 150 L 36 150 Z" fill="#17243b"/>
+  <text x="58" y="136" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="700">com.ats.candidate</text>
+
+  <g>
+    <rect x="72" y="184" width="340" height="300" rx="14" fill="#f1ebfb" stroke="#6946a5" stroke-width="3"/>
+    <path d="M 72 214 L 72 184 L 190 184 L 210 204 L 300 204 L 300 214 Z" fill="#6946a5"/>
+    <text x="92" y="207" fill="#ffffff" font-family="Arial, sans-serif" font-size="17" font-weight="700">api</text>
+    <rect x="102" y="244" width="280" height="62" rx="10" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+    <text x="242" y="270" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="16" font-weight="700">controller/</text>
+    <text x="242" y="291" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="13">Inbound HTTP adapter</text>
+    <rect x="102" y="324" width="128" height="62" rx="10" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+    <text x="166" y="350" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="16" font-weight="700">dto/</text>
+    <text x="166" y="371" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="13">API models</text>
+    <rect x="254" y="324" width="128" height="62" rx="10" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+    <text x="318" y="350" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="16" font-weight="700">exception/</text>
+    <text x="318" y="371" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="13">HTTP errors</text>
+  </g>
+
+  <g>
+    <rect x="450" y="184" width="660" height="530" rx="14" fill="#e8f1fb" stroke="#2364aa" stroke-width="3"/>
+    <path d="M 450 214 L 450 184 L 610 184 L 630 204 L 760 204 L 760 214 Z" fill="#2364aa"/>
+    <text x="470" y="207" fill="#ffffff" font-family="Arial, sans-serif" font-size="17" font-weight="700">application</text>
+
+    <rect x="480" y="244" width="260" height="190" rx="10" fill="#ffffff" stroke="#2364aa" stroke-width="2"/>
+    <path d="M 480 270 L 480 244 L 580 244 L 594 258 L 680 258 L 680 270 Z" fill="#2364aa"/>
+    <text x="496" y="263" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="700">port.in/</text>
+    <text x="510" y="304" fill="#17243b" font-family="Arial, sans-serif" font-size="15" font-weight="700">command/</text>
+    <text x="510" y="328" fill="#59687f" font-family="Arial, sans-serif" font-size="13">Create / update / delete</text>
+    <text x="510" y="366" fill="#17243b" font-family="Arial, sans-serif" font-size="15" font-weight="700">query/</text>
+    <text x="510" y="390" fill="#59687f" font-family="Arial, sans-serif" font-size="13">Read-only use cases</text>
+    <text x="510" y="416" fill="#2364aa" font-family="Arial, sans-serif" font-size="12" font-style="italic">Inbound ports</text>
+
+    <rect x="770" y="244" width="300" height="190" rx="10" fill="#ffffff" stroke="#147d78" stroke-width="2"/>
+    <path d="M 770 270 L 770 244 L 870 244 L 884 258 L 960 258 L 960 270 Z" fill="#147d78"/>
+    <text x="786" y="263" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="700">port.out/</text>
+    <text x="800" y="304" fill="#17243b" font-family="Arial, sans-serif" font-size="15" font-weight="700">LoadCandidatePort</text>
+    <text x="800" y="330" fill="#59687f" font-family="Arial, sans-serif" font-size="13">Read capability</text>
+    <text x="800" y="366" fill="#17243b" font-family="Arial, sans-serif" font-size="15" font-weight="700">SaveCandidatePort</text>
+    <text x="800" y="392" fill="#59687f" font-family="Arial, sans-serif" font-size="13">Write capability</text>
+    <text x="800" y="416" fill="#147d78" font-family="Arial, sans-serif" font-size="12" font-style="italic">Outbound contracts</text>
+
+    <rect x="480" y="464" width="260" height="112" rx="10" fill="#ffffff" stroke="#17243b" stroke-width="2"/>
+    <path d="M 480 490 L 480 464 L 580 464 L 594 478 L 680 478 L 680 490 Z" fill="#17243b"/>
+    <text x="496" y="483" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="700">service/</text>
+    <text x="610" y="526" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="15" font-weight="700">Use-case services</text>
+    <text x="610" y="552" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="13">Command and query handlers</text>
+
+    <rect x="770" y="464" width="300" height="112" rx="10" fill="#f1ebfb" stroke="#6946a5" stroke-width="2"/>
+    <path d="M 770 490 L 770 464 L 870 464 L 884 478 L 960 478 L 960 490 Z" fill="#6946a5"/>
+    <text x="786" y="483" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="700">saga / event.handler</text>
+    <text x="920" y="526" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="15" font-weight="700">Workflow coordination</text>
+    <text x="920" y="552" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="13">Events and long-running processes</text>
+
+    <text x="780" y="650" text-anchor="middle" fill="#2364aa" font-family="Arial, sans-serif" font-size="14" font-weight="700">Application orchestrates; it does not own technical persistence.</text>
+  </g>
+
+  <g>
+    <rect x="72" y="536" width="340" height="374" rx="14" fill="#e7f6f4" stroke="#147d78" stroke-width="3"/>
+    <path d="M 72 566 L 72 536 L 190 536 L 210 556 L 300 556 L 300 566 Z" fill="#147d78"/>
+    <text x="92" y="559" fill="#ffffff" font-family="Arial, sans-serif" font-size="17" font-weight="700">domain</text>
+    <rect x="102" y="596" width="280" height="66" rx="10" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+    <text x="242" y="624" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="16" font-weight="700">aggregate/</text>
+    <text x="242" y="646" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="13">Aggregate roots and invariants</text>
+    <rect x="102" y="680" width="128" height="66" rx="10" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+    <text x="166" y="707" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="15" font-weight="700">valueobject/</text>
+    <text x="166" y="729" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="12">Value objects</text>
+    <rect x="254" y="680" width="128" height="66" rx="10" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+    <text x="318" y="707" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="15" font-weight="700">event/</text>
+    <text x="318" y="729" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="12">Domain events</text>
+    <rect x="102" y="764" width="128" height="66" rx="10" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+    <text x="166" y="791" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="15" font-weight="700">repository/</text>
+    <text x="166" y="813" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="12">Optional domain ports</text>
+    <rect x="254" y="764" width="128" height="66" rx="10" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+    <text x="318" y="791" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="15" font-weight="700">exception/</text>
+    <text x="318" y="813" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="12">Domain errors</text>
+    <text x="242" y="870" text-anchor="middle" fill="#147d78" font-family="Arial, sans-serif" font-size="13" font-weight="700">No domain/entity package</text>
+  </g>
+
+  <g>
+    <rect x="1168" y="184" width="340" height="592" rx="14" fill="#fff1e5" stroke="#b7601c" stroke-width="3"/>
+    <path d="M 1168 214 L 1168 184 L 1300 184 L 1320 204 L 1410 204 L 1410 214 Z" fill="#b7601c"/>
+    <text x="1188" y="207" fill="#ffffff" font-family="Arial, sans-serif" font-size="17" font-weight="700">infrastructure</text>
+    <rect x="1198" y="244" width="280" height="74" rx="10" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+    <text x="1338" y="274" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="16" font-weight="700">adapter/</text>
+    <text x="1338" y="298" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="13">Secondary adapters</text>
+    <rect x="1198" y="338" width="280" height="82" rx="10" fill="#ffffff" stroke="#b7601c" stroke-width="2"/>
+    <text x="1338" y="370" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="16" font-weight="700">persistence/entity/</text>
+    <text x="1338" y="396" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="13">JPA / persistence entities</text>
+    <rect x="1198" y="440" width="280" height="74" rx="10" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+    <text x="1338" y="470" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="16" font-weight="700">persistence/repository/</text>
+    <text x="1338" y="494" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="13">Spring Data repositories</text>
+    <rect x="1198" y="534" width="134" height="74" rx="10" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+    <text x="1265" y="564" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="16" font-weight="700">mapper/</text>
+    <text x="1265" y="588" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="13">Conversions</text>
+    <rect x="1344" y="534" width="134" height="74" rx="10" fill="#ffffff" stroke="#d8e0eb" stroke-width="2"/>
+    <text x="1411" y="564" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="16" font-weight="700">messaging/</text>
+    <text x="1411" y="588" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="13">Event adapters</text>
+    <text x="1338" y="698" text-anchor="middle" fill="#b7601c" font-family="Arial, sans-serif" font-size="13" font-weight="700">Implements port.out</text>
+  </g>
+
+  <g>
+    <rect x="1168" y="814" width="340" height="96" rx="14" fill="#f1ebfb" stroke="#6946a5" stroke-width="3"/>
+    <path d="M 1168 844 L 1168 814 L 1300 814 L 1320 834 L 1410 834 L 1410 844 Z" fill="#6946a5"/>
+    <text x="1188" y="837" fill="#ffffff" font-family="Arial, sans-serif" font-size="17" font-weight="700">config</text>
+    <text x="1338" y="875" text-anchor="middle" fill="#17243b" font-family="Arial, sans-serif" font-size="15" font-weight="700">Bean wiring · Security · OpenAPI</text>
+    <text x="1338" y="897" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="13">Framework configuration only</text>
+  </g>
+
+  <line x1="412" y1="276" x2="470" y2="276" stroke="#59687f" stroke-width="3" stroke-dasharray="8 6" marker-end="url(#dependency-arrow)"/>
+  <text x="441" y="260" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="12" font-weight="700">depends on</text>
+  <path d="M 610 464 C 610 450, 610 444, 610 434" fill="none" stroke="#59687f" stroke-width="3" stroke-dasharray="8 6" marker-end="url(#dependency-arrow)"/>
+  <text x="630" y="452" fill="#59687f" font-family="Arial, sans-serif" font-size="12" font-weight="700">implements</text>
+  <path d="M 740 530 C 752 530, 758 470, 780 420" fill="none" stroke="#59687f" stroke-width="3" stroke-dasharray="8 6" marker-end="url(#dependency-arrow)"/>
+  <text x="748" y="498" fill="#59687f" font-family="Arial, sans-serif" font-size="12" font-weight="700">uses</text>
+  <path d="M 560 576 C 480 590, 420 600, 390 620" fill="none" stroke="#59687f" stroke-width="3" stroke-dasharray="8 6" marker-end="url(#dependency-arrow)"/>
+  <text x="460" y="584" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="12" font-weight="700">depends on</text>
+  <path d="M 1168 276 C 1130 276, 1120 276, 1078 276" fill="none" stroke="#b7601c" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#implementation-arrow)"/>
+  <text x="1120" y="258" text-anchor="middle" fill="#b7601c" font-family="Arial, sans-serif" font-size="12" font-weight="700">implements</text>
+  <line x1="1198" y1="379" x2="1130" y2="379" stroke="#59687f" stroke-width="3" stroke-dasharray="8 6" marker-end="url(#dependency-arrow)"/>
+  <line x1="1338" y1="420" x2="1338" y2="432" stroke="#59687f" stroke-width="3" stroke-dasharray="8 6" marker-end="url(#dependency-arrow)"/>
+  <line x1="1338" y1="514" x2="1338" y2="526" stroke="#59687f" stroke-width="3" stroke-dasharray="8 6" marker-end="url(#dependency-arrow)"/>
+  <path d="M 1340 814 C 1340 790, 1340 790, 1340 778" fill="none" stroke="#59687f" stroke-width="3" stroke-dasharray="8 6" marker-end="url(#dependency-arrow)"/>
+  <path d="M 1000 576 C 1070 620, 1100 650, 1160 650" fill="none" stroke="#147d78" stroke-width="3" marker-end="url(#event-arrow)"/>
+  <text x="1080" y="638" text-anchor="middle" fill="#147d78" font-family="Arial, sans-serif" font-size="12" font-weight="700">event flow</text>
+
+  <rect x="52" y="934" width="1470" height="24" rx="12" fill="#f7f9fc"/>
+  <text x="787" y="952" text-anchor="middle" fill="#59687f" font-family="Arial, sans-serif" font-size="13">Dashed arrows: package dependency / implementation · solid teal arrow: runtime event flow</text>
+</svg>
