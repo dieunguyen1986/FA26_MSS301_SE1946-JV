@@ -3,7 +3,7 @@ package fu.ats.api.rest;
 import fu.ats.api.dto.CandidateRequest;
 import fu.ats.api.dto.CandidateResponse;
 import fu.ats.application.command.CandidateCommand;
-import fu.ats.application.port.in.CreateCandidatePort;
+import fu.ats.application.port.in.CreateCandidateUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/candidates")
 @RequiredArgsConstructor
 public class CandidateController {
-    private final CreateCandidatePort createCandidatePort;
+    private final CreateCandidateUseCase createCandidatePort;
 
     @PostMapping
     public ResponseEntity<CandidateResponse> createCandidate(@Valid @RequestBody CandidateRequest request) {

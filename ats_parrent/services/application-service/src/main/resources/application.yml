@@ -1,18 +1,20 @@
 server:
-  port: 8080
+  port: 8083
 
 spring:
   application:
-    name: candidate-service
-  cloud:
-    gateway:
-      server:
-        webflux:
-          routes:
-            - id: candidate-service
-              uri:
-              predicates:
-                - name: candidate
-                  args:
-                    Path:
-
+    name: job-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/application_sdb
+    driver-class-name: org.postgresql.Driver
+    username: dieunt
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        show_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect

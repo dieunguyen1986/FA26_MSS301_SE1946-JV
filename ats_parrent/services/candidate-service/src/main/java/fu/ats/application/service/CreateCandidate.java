@@ -1,16 +1,16 @@
 package fu.ats.application.service;
 
 import fu.ats.application.command.CandidateCommand;
-import fu.ats.application.port.in.CreateCandidatePort;
+import fu.ats.application.port.out.SaveCandidatePort;
 import fu.ats.domain.aggregate.CandidateAggregate;
-import fu.ats.domain.repository.CandidateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CreateCandidateUseCase implements CreateCandidatePort {
-    private  final CandidateRepository candidateRepository;
+public class CreateCandidate implements fu.ats.application.port.in.CreateCandidateUseCase {
+    private final SaveCandidatePort saveCandidatePort;
+
     @Override
     public CandidateAggregate execute(CandidateCommand command) {
         // map cmd -> aggregate root
@@ -19,7 +19,7 @@ public class CreateCandidateUseCase implements CreateCandidatePort {
         // Business Validate
 
         // call doamin/repository
-       return candidateRepository.save(aggregate);
+        return saveCandidatePort.save(aggregate);
 
     }
 }
