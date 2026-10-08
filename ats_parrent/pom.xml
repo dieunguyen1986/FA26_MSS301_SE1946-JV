@@ -13,6 +13,7 @@
         <module>services/candidate-service</module>
         <module>services/application-service</module>
         <module>infras/api-gateway</module>
+        <module>infras/eureka-server</module>
     </modules>
 
     <properties>

@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: job-service
+    name: application-service
   datasource:
     url: jdbc:postgresql://localhost:5432/application_sdb
     driver-class-name: org.postgresql.Driver
@@ -18,3 +18,24 @@ spring:
       hibernate:
         show_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+job-service:
+  url: http://localhost:8081
+candidate-service:
+  url: http://localhost:8082
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/  # Địa chỉ Eureka Server
+    fetch-registry: true      # Tải registry về local cache
+    register-with-eureka: true  # Đăng ký bản thân vào registry
+  instance:
+    prefer-ip-address: true    # Dùng IP thay hostname - quan trọng trong Docker
+    lease-renewal-interval-in-seconds: 10   # Heartbeat mỗi 10s (dev)
+    lease-expiration-duration-in-seconds: 30  # Expiry sau 30s không có heartbeat
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,env

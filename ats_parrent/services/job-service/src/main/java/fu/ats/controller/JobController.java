@@ -25,13 +25,18 @@ public class JobController {
         return ResponseEntity.ok(ResponseApi.builder()
                 .message("Job created")
                 .code(HttpStatus.CREATED)
-                .data(jobResponse)
+                 .data(jobResponse)
                 .build());
     }
 
+//    @GetMapping("/{id}")
+//    public ResponseEntity<ResponseApi> read(@Valid @PathVariable(name = "id") UUID uuid) {
+//        return ResponseEntity.ok(ResponseApi.builder().code(HttpStatus.ACCEPTED).message("")
+//                .data(jobService.findById(uuid)).build());
+//    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseApi> read(@Valid @PathVariable(name = "id") UUID uuid) {
-        return ResponseEntity.ok(ResponseApi.builder().code(HttpStatus.ACCEPTED).message("")
-                .data(jobService.findById(uuid)).build());
+    public ResponseEntity<JobResponse> read(@Valid @PathVariable(name = "id") UUID uuid) {
+        return ResponseEntity.ok(jobService.findById(uuid));
     }
 }

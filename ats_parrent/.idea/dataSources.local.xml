@@ -16,6 +16,7 @@
             </node>
             <node kind="database">
               <name qname="application_sdb" />
+              <name qname="candidate_sdb" />
               <name qname="job_sdb" />
               <node kind="schema" qname="public" />
             </node>

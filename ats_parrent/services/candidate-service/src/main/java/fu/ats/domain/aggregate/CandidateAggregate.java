@@ -38,10 +38,26 @@ public class CandidateAggregate {
         candidateAggregate.utmMedium = command.utmMedium();
         candidateAggregate.utmCampaign = command.utmCampaign();
         candidateAggregate.status = CandidateStatus.ACTIVE;
-        if(command.userId() == null) {
-            throw  new IllegalArgumentException("User id is null");
+        if (command.userId() == null) {
+            throw new IllegalArgumentException("User id is null");
         }
         candidateAggregate.userId = command.userId();
+        return candidateAggregate;
+    }
+
+    public static CandidateAggregate restore(String fullName, String source,
+                                             String utmSource,
+                                             String utmMedium,
+                                             String utmCampaign,
+                                             CandidateStatus status) {
+        CandidateAggregate candidateAggregate = new CandidateAggregate();
+        candidateAggregate.fullName = fullName;
+        candidateAggregate.source = source;
+        candidateAggregate.utmSource = utmSource;
+        candidateAggregate.utmMedium = utmMedium;
+        candidateAggregate.utmCampaign = utmCampaign;
+        candidateAggregate.status = status;
+
         return candidateAggregate;
     }
 }

@@ -15,6 +15,6 @@ public class GlobalExceptionHandler {//extends ResponseEntityExceptionHandler {
         e.printStackTrace();
         log.error(e.getMessage());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }

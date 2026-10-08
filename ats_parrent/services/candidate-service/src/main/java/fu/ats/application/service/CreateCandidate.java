@@ -1,6 +1,7 @@
 package fu.ats.application.service;
 
 import fu.ats.application.command.CandidateCommand;
+import fu.ats.application.port.in.CreateCandidateUseCase;
 import fu.ats.application.port.out.SaveCandidatePort;
 import fu.ats.domain.aggregate.CandidateAggregate;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CreateCandidate implements fu.ats.application.port.in.CreateCandidateUseCase {
+public class CreateCandidate implements CreateCandidateUseCase {
     private final SaveCandidatePort saveCandidatePort;
 
     @Override

@@ -4,18 +4,19 @@ import fu.ats.api.dto.CandidateRequest;
 import fu.ats.api.dto.CandidateResponse;
 import fu.ats.application.command.CandidateCommand;
 import fu.ats.application.port.in.CreateCandidateUseCase;
+import fu.ats.application.port.in.FindCandidateUseCase;
+import fu.ats.application.query.CandidateQuery;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/candidates")
 @RequiredArgsConstructor
 public class CandidateController {
     private final CreateCandidateUseCase createCandidatePort;
+    private final FindCandidateUseCase findCandidateUseCase;
 
     @PostMapping
     public ResponseEntity<CandidateResponse> createCandidate(@Valid @RequestBody CandidateRequest request) {
@@ -26,8 +27,8 @@ public class CandidateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CandidateResponse> getCandidateById(@PathVariable("id") UUID id) {
+    public ResponseEntity<CandidateResponse> getCandidateById(@PathVariable("id") Long id) {
 
-        return ResponseEntity.ok(new CandidateResponse());
+        return ResponseEntity.ok(findCandidateUseCase.execute(new CandidateQuery(id)));
     }
 }
