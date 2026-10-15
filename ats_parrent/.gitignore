@@ -37,3 +37,6 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/infras/api-gateway/.env
+.env
+**/.env

@@ -48,6 +48,11 @@ spring:
               predicates:
                 - Path=/api/v1/cvparse/**
 #                  Header=X-Web-Client
+app:
+  oidc:
+    issuer: https://accounts.google.com
+    jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+    client-id: ${APP_CLIENT_ID}
 
 eureka:
   client:
@@ -66,5 +71,7 @@ management:
       exposure:
         include: health,info,env
 
-
-
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.cloud.gateway: DEBUG
