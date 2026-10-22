@@ -1,82 +1,12 @@
-server:
-  port: 8080
-
 spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://accounts.google.com
   application:
     name: api-gateway
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  config:
+    import: "configserver:${CONFIG_SERVER_URL:http://localhost:8888}"
   cloud:
-    gateway:
-#      globalcors:
-#        cors-configurations:
-#          '[/**]':
-#            allowedOrigins:
-#              - "http://localhost:5173"
-#              - "https://app.example.com"
-#            allowedMethods:
-#              - GET
-#              - POST
-#              - PUT
-#              - DELETE
-#              - OPTIONS
-#            allowedHeaders:
-#              - "*"
-#            exposedHeaders:
-#              - X-RateLimit-Remaining
-#            allowCredentials: true
-#            maxAge: 3600
-      server:
-        webflux:
-          routes:
-            - id: job-service
-              uri: lb://job-service
-              predicates:
-                - Path=/api/v1/jobs/**
-            - id: candidate-service
-              uri: lb://candidate-service
-              predicates:
-                - Path=/api/v1/candidates/**
-            - id: application-service
-              uri: lb://application-service
-              predicates:
-                - Path=/api/v1/applications/**
-            - id: notification-service
-              uri: lb://notification-service
-              predicates:
-                - Path=/api/v1/notifications/**
-            - id: cvparse-service
-              uri: lb://cv-parse-service
-              predicates:
-                - Path=/api/v1/cvparse/**
-#                  Header=X-Web-Client
-app:
-  oidc:
-    issuer: https://accounts.google.com
-    jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
-    client-id: ${APP_CLIENT_ID}
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/  # Địa chỉ Eureka Server
-    fetch-registry: true      # Tải registry về local cache
-    register-with-eureka: true  # Đăng ký bản thân vào registry
-  instance:
-    prefer-ip-address: true    # Dùng IP thay hostname - quan trọng trong Docker
-    lease-renewal-interval-in-seconds: 10   # Heartbeat mỗi 10s (dev)
-    lease-expiration-duration-in-seconds: 30  # Expiry sau 30s không có heartbeat
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,env
-
-logging:
-  level:
-    org.springframework.security: DEBUG
-    org.springframework.cloud.gateway: DEBUG
+    config:
+      fail-fast: true
+      username: ${CONFIG_SERVER_USERNAME}
+      password: ${CONFIG_SERVER_PASSWORD}

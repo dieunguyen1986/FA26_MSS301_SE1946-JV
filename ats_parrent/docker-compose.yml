@@ -1,0 +1,24 @@
+name: talenthub
+
+# All services join Compose's default network automatically and can reach
+# each other by service name (eg "eureka-server", "job-db"). No custom
+# network block is needed for a single-file local setup.
+
+services:
+  # ===== KEYCLOAK (Identity Provider) =====
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.0
+    # start-dev: chế độ dev (không cần HTTPS). --import-realm: nạp realm từ file lúc khởi động.
+    command: ["start-dev", "--import-realm"]
+    ports:
+      - "8180:8080"          # gọi token tại http://localhost:8180/realms/ats/...
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin       # tài khoản admin console (dev)
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HTTP_ENABLED: "true"
+      KC_PROXY_HEADERS: "xforwarded"
+    volumes:
+      # Keycloak imports this realm on the first start when it does not exist yet.
+      # Existing realms are kept; create users from the Keycloak Admin Console.
+      - ./infra/keycloak/ats-realm.json:/opt/keycloak/data/import/ats-realm.json:ro

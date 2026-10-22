@@ -1,0 +1,20 @@
+server:
+  port: ${JOB_SERVICE_PORT:8081}
+
+spring:
+  datasource:
+    url: ${JOB_DB_URL:jdbc:postgresql://localhost:5432/job_sdb}
+    username: ${JOB_DB_USERNAME}
+    password: ${JOB_DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  jpa:
+    hibernate:
+      ddl-auto: validate

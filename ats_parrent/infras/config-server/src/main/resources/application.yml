@@ -1,0 +1,71 @@
+# Bootstrap configuration for Config Server itself.
+# Keep secrets out of this file; provide them as environment variables.
+server:
+  port: ${CONFIG_SERVER_PORT:8888}
+  shutdown: graceful
+
+spring:
+  application:
+    name: config-server
+  # `native` is convenient for local training.
+  # Production must set CONFIG_SERVER_PROFILE=git.
+  # For ConfigServerApplication, do not set SPRING_PROFILES_ACTIVE=dev in IntelliJ;
+  # SPRING_PROFILES_ACTIVE has higher precedence and can override this selection.
+  profiles:
+    active: ${CONFIG_SERVER_PROFILE:native}
+  security:
+    user:
+      # Clients use these credentials when requesting application configuration.
+      # Do not replace these placeholders with real credentials in Git.
+      name: ${CONFIG_SERVER_USERNAME}
+      password: ${CONFIG_SERVER_PASSWORD}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # Keep the management surface small. Never expose `env` in production.
+        include: health,info
+  endpoint:
+    health:
+      # Health can be checked without revealing database or environment details.
+      show-details: never
+
+---
+spring:
+  config:
+    activate:
+      on-profile: native
+  cloud:
+    config:
+      server:
+        native:
+          # LOCAL/TRAINING ONLY:
+          # Read configuration from a directory outside the Config Server JAR.
+          # In IntelliJ, run from the project root or set an absolute path with
+          # CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS.
+          search-locations: "${CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS:file:./config-repo}"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: git
+  cloud:
+    config:
+      server:
+        git:
+          # PRODUCTION:
+          # Use a separate private Git repository for application configuration.
+          # The repository should contain only non-secret settings and ${ENV_VAR}
+          # placeholders. Store Git credentials in a secret manager/environment.
+          uri: ${CONFIG_REPO_URI}
+          username: ${CONFIG_REPO_USERNAME:}
+          password: ${CONFIG_REPO_PASSWORD:}
+          # Git branch/tag to read. Pin this value during a release for repeatability.
+          default-label: ${CONFIG_REPO_BRANCH:main}
+          # Fail startup if the repository cannot be cloned. This prevents serving
+          # an application with missing or stale production configuration.
+          clone-on-start: true
+          force-pull: true
+          timeout: 10

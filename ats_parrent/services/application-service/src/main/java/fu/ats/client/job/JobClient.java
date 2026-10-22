@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.UUID;
 
-@FeignClient(name = "job-service", url = "${job-service.url}", configuration =JobFeignConfig.class)
+@FeignClient(name = "job-service", configuration = JobFeignConfig.class)
 public interface JobClient {
 
     @GetMapping("/api/v1/jobs/{id}")

@@ -1,0 +1,20 @@
+server:
+  port: ${APPLICATION_SERVICE_PORT:8083}
+
+spring:
+  datasource:
+    url: ${APPLICATION_DB_URL:jdbc:postgresql://localhost:5432/application_sdb}
+    username: ${APPLICATION_DB_USERNAME}
+    password: ${APPLICATION_DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  jpa:
+    hibernate:
+      ddl-auto: validate

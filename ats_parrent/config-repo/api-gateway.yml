@@ -1,0 +1,59 @@
+server:
+  port: ${API_GATEWAY_PORT:8080}
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${APP_OIDC_ISSUER:https://accounts.google.com}
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: job-service
+              uri: lb://job-service
+              predicates:
+                - Path=/api/v1/jobs/**
+            - id: candidate-service
+              uri: lb://candidate-service
+              predicates:
+                - Path=/api/v1/candidates/**
+            - id: application-service
+              uri: lb://application-service
+              predicates:
+                - Path=/api/v1/applications/**
+            - id: notification-service
+              uri: lb://notification-service
+              predicates:
+                - Path=/api/v1/notifications/**
+            - id: cvparse-service
+              uri: lb://cv-parse-service
+              predicates:
+                - Path=/api/v1/cvparse/**
+
+app:
+  oidc:
+    issuer: ${APP_OIDC_ISSUER:http://localhost:8180/realms/ats}  #https://accounts.google.com
+    jwk-set-uri: ${APP_OIDC_JWK_SET_URI:http://localhost:8180/realms/ats/protocol/openid-connect/certs}
+    client-id: ${APP_CLIENT_ID}
+  cors:
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:5173}
+    allowed-methods: ${APP_CORS_ALLOWED_METHODS:GET,POST,PUT,DELETE,PATCH,OPTIONS}
+    allowed-headers: ${APP_CORS_ALLOWED_HEADERS:Authorization,Content-Type,Accept,X-Correlation-Id}
+
+logging:
+  level:
+    org.springframework.security: INFO
+    org.springframework.cloud.gateway: INFO
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+logging:
+  level:
+    org.springframework.security: WARN
+    org.springframework.cloud.gateway: WARN

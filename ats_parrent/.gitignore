@@ -40,3 +40,7 @@ build/
 /infras/api-gateway/.env
 .env
 **/.env
+.env.*
+**/.env.*
+!.env.example
+!**/.env.example
