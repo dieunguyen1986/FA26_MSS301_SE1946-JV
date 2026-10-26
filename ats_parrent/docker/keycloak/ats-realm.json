@@ -1,0 +1,113 @@
+{
+  "realm": "ats",
+  "enabled": true,
+  "registrationAllowed": false,
+  "roles": {
+    "realm": [
+      {
+        "name": "ADMIN",
+        "description": "Quản trị viên hệ thống"
+      },
+      {
+        "name": "RECRUITER",
+        "description": "Nhà tuyển dụng"
+      },
+      {
+        "name": "CANDIDATE",
+        "description": "Ứng viên"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "ats-web",
+      "name": "ATS Web",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "redirectUris": [
+        "http://localhost:3000/*",
+        "https://oauth.pstmn.io/v1/callback"
+      ],
+      "webOrigins": [
+        "http://localhost:3000",
+        "https://oauth.pstmn.io"
+      ]
+    },
+    {
+      "clientId": "ats-postman",
+      "name": "ATS Postman",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "defaultClientScopes": [
+        "openid",
+        "profile",
+        "email",
+        "roles",
+        "web-origins"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "email": "admin@ats.local",
+      "firstName": "ATS",
+      "lastName": "Admin",
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "username": "recruiter",
+      "enabled": true,
+      "email": "recruiter@ats.local",
+      "firstName": "ATS",
+      "lastName": "Recruiter",
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "recruiter123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "RECRUITER"
+      ]
+    },
+    {
+      "username": "candidate",
+      "enabled": true,
+      "email": "candidate@ats.local",
+      "firstName": "ATS",
+      "lastName": "Candidate",
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "candidate123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "CANDIDATE"
+      ]
+    }
+  ]
+}

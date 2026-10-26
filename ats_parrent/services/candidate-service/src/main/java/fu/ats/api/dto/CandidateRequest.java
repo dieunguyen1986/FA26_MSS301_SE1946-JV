@@ -1,5 +1,6 @@
 package fu.ats.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -37,5 +38,6 @@ public class CandidateRequest {
     @Size(max = 255, message = "UTM campaign must not exceed 255 characters")
     private String utmCampaign;
 
+    @JsonIgnore
     private UUID userId;
 }

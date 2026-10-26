@@ -44,3 +44,5 @@ build/
 **/.env.*
 !.env.example
 !**/.env.example
+CONFIGURATION.md
+PRODUCTION_DEPLOYMENT.md

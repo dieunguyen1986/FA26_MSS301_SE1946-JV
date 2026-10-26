@@ -7,6 +7,7 @@ Config Server:
 - Mật khẩu DB, mật khẩu Config Server, Git token và Google Client ID được truyền qua Environment Variables. Không đặt giá trị thật vào các file YAML hoặc Git.
 - Actuator chỉ mở `health,info`; endpoint `env` đã được tắt vì có thể làm lộ secret.
 - Profile `dev` dùng `ddl-auto: update`; profile `prod` dùng `ddl-auto: validate` để ứng dụng không tự ý thay đổi schema production.
+- Bốn service nghiệp vụ nhận identity đã được API Gateway xác thực qua `X-User-ID`, `X-User-Email`, `X-User-Name`, `X-User-Roles` và dựng lại `SecurityContext` stateless. Role hợp lệ là `RECRUITER`, `CANDIATE` và `ADMIN`.
 
 ## Chạy local trong IntelliJ
 
@@ -18,6 +19,32 @@ Config Server:
 Config Server: `http://localhost:8888/actuator/health`  
 Eureka: `http://localhost:8761`  
 Gateway: `http://localhost:8080`
+
+## Chạy toàn bộ bằng Docker
+
+Từ thư mục gốc project:
+
+```bash
+docker compose up -d --build
+docker compose ps
+```
+
+Các địa chỉ dùng khi học local:
+
+- API Gateway: `http://localhost:8080`
+- Keycloak: `http://localhost:8180` — admin console `admin/admin`
+- Keycloak demo users: `admin/admin123`, `recruiter/recruiter123`, `candidate/candidate123`
+- Eureka: `http://localhost:8761`
+- RabbitMQ: `http://localhost:15672` — `ats/ats`
+- MinIO: `http://localhost:9001` — `minio/minio123`
+- MailHog: `http://localhost:8025`
+- PostgreSQL: `localhost:5432` — `ats/ats`
+- Redis: `localhost:6379`
+- Kafka: `localhost:9092`
+
+Dừng hệ thống bằng `docker compose down`. Database được tạo tự động ở lần chạy đầu tiên khi volume PostgreSQL còn trống.
+
+Nếu cổng `8180` đang được sử dụng, chạy `KEYCLOAK_PORT=8181 docker compose up -d` và mở Keycloak tại `http://localhost:8181`.
 
 ## Production checklist
 

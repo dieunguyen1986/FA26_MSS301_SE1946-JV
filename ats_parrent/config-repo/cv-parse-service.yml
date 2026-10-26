@@ -1,0 +1,9 @@
+server:
+  port: ${CV_PARSE_SERVICE_PORT:8085}
+
+cv-parse:
+  mode: ${CV_PARSE_MODE:simulated}
+
+logging:
+  level:
+    fu.ats: INFO

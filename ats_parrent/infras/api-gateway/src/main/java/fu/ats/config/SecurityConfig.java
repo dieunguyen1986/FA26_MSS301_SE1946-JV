@@ -1,11 +1,17 @@
 package fu.ats.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtValidators;
+import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
@@ -26,33 +32,15 @@ public class SecurityConfig {
                 .build();
     }
 
-    /*
-     * OLD CUSTOM APPROACH - kept here for training reference.
-     *
-     * Spring Security can validate the JWT automatically when
-     * spring.security.oauth2.resourceserver.jwt.issuer-uri is configured.
-     * The old code manually configured the JWK URL, issuer validator and
-     * optional audience validator, so it is not needed for the simple setup.
-     *
-     * @Value("${app.oidc.jwk-set-uri}")
-     * private String jwkSetUri;
-     *
-     * @Value("${app.oidc.issuer}")
-     * private String issuer;
-     *
-     * @Value("${app.oidc.audience:}")
-     * private String audience;
-     *
-     * @Bean
-     * ReactiveJwtDecoder jwtDecoder() {
-     *     NimbusReactiveJwtDecoder decoder =
-     *             NimbusReactiveJwtDecoder.withJwkSetUri(jwkSetUri).build();
-     *
-     *     OAuth2TokenValidator<Jwt> issuerValidator =
-     *             JwtValidators.createDefaultWithIssuer(issuer);
-     *
-     *     decoder.setJwtValidator(issuerValidator);
-     *     return decoder;
-     * }
-     */
+    @Bean
+    ReactiveJwtDecoder jwtDecoder(
+            @Value("${app.oidc.jwk-set-uri}") String jwkSetUri,
+            @Value("${app.oidc.issuer}") String issuer) {
+        NimbusReactiveJwtDecoder decoder =
+                NimbusReactiveJwtDecoder.withJwkSetUri(jwkSetUri).build();
+        OAuth2TokenValidator<Jwt> issuerValidator =
+                JwtValidators.createDefaultWithIssuer(issuer);
+        decoder.setJwtValidator(issuerValidator);
+        return decoder;
+    }
 }

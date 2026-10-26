@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -21,12 +23,11 @@ public class JobController {
     private final JobService jobService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('RECRUITER', 'ADMIN')")
     public ResponseEntity<ResponseApi> create(@Valid @RequestBody JobRequest request,
-                                              @RequestHeader("X-User-ID") String userId,
-                                              @RequestHeader("X-User-Email") String email,
-                                              @RequestHeader("X-User-Name") String userName
+                                              Authentication authentication
                                               ) {
-        log.info("User Id {}, User email {}, name {}", userId, email, userName);
+        log.info("Job created by {}", authentication.getName());
 
         JobResponse jobResponse = jobService.save(request);
 
@@ -44,13 +45,12 @@ public class JobController {
 //    }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('CANDIATE', 'RECRUITER', 'ADMIN')")
     public ResponseEntity<JobResponse> read(@Valid @PathVariable(name = "id") UUID uuid,
-                                            @RequestHeader("X-User-ID") String userId,
-                                            @RequestHeader("X-User-Email") String email,
-                                            @RequestHeader("X-User-Name") String userName
+                                            Authentication authentication
                                             ) {
 
-        log.info("User Id {}, User email {}, name {}", userId, email, userName);
+        log.info("Job {} read by {}", uuid, authentication.getName());
 
         return ResponseEntity.ok(jobService.findById(uuid));
     }

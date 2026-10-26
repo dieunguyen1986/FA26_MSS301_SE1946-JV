@@ -43,11 +43,20 @@ public class KecloakHeaderFilter implements GlobalFilter, Ordered {
                 .map(JwtAuthenticationToken.class::cast)
                 .map(authentication -> {
                     Jwt jwt = authentication.getToken();
+                    String userId = jwt.getSubject();
+                    if (userId == null || userId.isBlank()) {
+                        userId = jwt.getClaimAsString("preferred_username");
+                    }
+                    if (userId == null || userId.isBlank()) {
+                        userId = jwt.getClaimAsString("email");
+                    }
+
+                    String authenticatedUserId = userId;
 
                     return cleanExchange.mutate()
                             .request(request -> request.headers(headers -> {
-                                if (jwt.getSubject() != null) {
-                                    headers.set(Constants.USER_ID, jwt.getSubject());
+                                if (authenticatedUserId != null && !authenticatedUserId.isBlank()) {
+                                    headers.set(Constants.USER_ID, authenticatedUserId);
                                 }
 
                                 String email = jwt.getClaimAsString("email");

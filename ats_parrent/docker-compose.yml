@@ -1,24 +1,288 @@
+# Local development stack: infrastructure, discovery, gateway and services.
 name: talenthub
 
-# All services join Compose's default network automatically and can reach
-# each other by service name (eg "eureka-server", "job-db"). No custom
-# network block is needed for a single-file local setup.
-
 services:
-  # ===== KEYCLOAK (Identity Provider) =====
-  keycloak:
-    image: quay.io/keycloak/keycloak:26.8.0
-    # start-dev: chế độ dev (không cần HTTPS). --import-realm: nạp realm từ file lúc khởi động.
-    command: ["start-dev", "--import-realm"]
-    ports:
-      - "8180:8080"          # gọi token tại http://localhost:8180/realms/ats/...
+  postgres:
+    # One PostgreSQL instance contains a separate database for each service.
+    image: postgres:16-alpine
     environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin       # tài khoản admin console (dev)
+      POSTGRES_USER: ats
+      POSTGRES_PASSWORD: ats
+      POSTGRES_DB: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      # Initialization scripts run only when the data volume is empty.
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ats -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  rabbitmq:
+    # 5672 is AMQP; 15672 is the management console.
+    image: rabbitmq:3.13-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ats
+      RABBITMQ_DEFAULT_PASS: ats
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  kafka:
+    # Single-node KRaft mode keeps local setup independent of ZooKeeper.
+    image: apache/kafka:3.9.0
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      # Other containers use kafka:9092 as the broker address.
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    ports:
+      - "9092:9092"
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+
+  minio:
+    # 9000 is the S3 API; 9001 is the web console.
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+
+  mailhog:
+    # SMTP is exposed on 1025 and the mail UI on 8025.
+    image: mailhog/mailhog:v1.0.1
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  redis:
+    # Redis is used as a local shared cache.
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  keycloak:
+    # Import the training realm with users and application roles.
+    image: quay.io/keycloak/keycloak:26.8.0
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KC_HOSTNAME_STRICT_HTTPS: "false"
       KC_HTTP_ENABLED: "true"
-      KC_PROXY_HEADERS: "xforwarded"
+      KC_PROXY_HEADERS: xforwarded
+    ports:
+      # Override KEYCLOAK_PORT when the default host port is occupied.
+      - "${KEYCLOAK_PORT:-8180}:8080"
     volumes:
-      # Keycloak imports this realm on the first start when it does not exist yet.
-      # Existing realms are kept; create users from the Keycloak Admin Console.
-      - ./infra/keycloak/ats-realm.json:/opt/keycloak/data/import/ats-realm.json:ro
+      - ./docker/keycloak/ats-realm.json:/opt/keycloak/data/import/ats-realm.json:ro
+  config-server:
+    # Native profile reads configuration from the mounted config-repo folder.
+    build:
+      context: .
+      args:
+        SERVICE_MODULE: infras/config-server
+        SERVICE_ARTIFACT: config-server
+    environment:
+      CONFIG_SERVER_PROFILE: native
+      CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS: file:/config-repo
+      CONFIG_SERVER_USERNAME: config-admin
+      CONFIG_SERVER_PASSWORD: change-this-password
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./config-repo:/config-repo:ro
+    # Restart while dependent services are still becoming available.
+    restart: on-failure
+
+  eureka-server:
+    # Service registry used by the gateway and business services.
+    build:
+      context: .
+      args:
+        SERVICE_MODULE: infras/eureka-server
+        SERVICE_ARTIFACT: eureka-server
+    environment:
+      CONFIG_SERVER_URL: http://config-server:8888
+      CONFIG_SERVER_USERNAME: config-admin
+      CONFIG_SERVER_PASSWORD: change-this-password
+      SPRING_PROFILES_ACTIVE: dev
+      EUREKA_HOSTNAME: eureka-server
+    ports:
+      - "8761:8761"
+    depends_on:
+      - config-server
+    restart: on-failure
+
+  job-service:
+    # Business services use Docker DNS names for internal dependencies.
+    build:
+      context: .
+      args:
+        SERVICE_MODULE: services/job-service
+        SERVICE_ARTIFACT: job-service
+    environment:
+      CONFIG_SERVER_URL: http://config-server:8888
+      CONFIG_SERVER_USERNAME: config-admin
+      CONFIG_SERVER_PASSWORD: change-this-password
+      EUREKA_SERVER_URL: http://eureka-server:8761/eureka/
+      SPRING_PROFILES_ACTIVE: dev
+      JOB_DB_URL: jdbc:postgresql://postgres:5432/job_sdb
+      JOB_DB_USERNAME: ats
+      JOB_DB_PASSWORD: ats
+    ports:
+      - "8081:8081"
+    depends_on:
+      # Wait for the database, then start after platform services exist.
+      postgres:
+        condition: service_healthy
+      config-server:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+    restart: on-failure
+
+  candidate-service:
+    build:
+      context: .
+      args:
+        SERVICE_MODULE: services/candidate-service
+        SERVICE_ARTIFACT: candidate-service
+    environment:
+      CONFIG_SERVER_URL: http://config-server:8888
+      CONFIG_SERVER_USERNAME: config-admin
+      CONFIG_SERVER_PASSWORD: change-this-password
+      EUREKA_SERVER_URL: http://eureka-server:8761/eureka/
+      SPRING_PROFILES_ACTIVE: dev
+      CANDIDATE_DB_URL: jdbc:postgresql://postgres:5432/candidate_sdb
+      CANDIDATE_DB_USERNAME: ats
+      CANDIDATE_DB_PASSWORD: ats
+    ports:
+      - "8082:8082"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      config-server:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+    restart: on-failure
+
+  application-service:
+    build:
+      context: .
+      args:
+        SERVICE_MODULE: services/application-service
+        SERVICE_ARTIFACT: application-service
+    environment:
+      CONFIG_SERVER_URL: http://config-server:8888
+      CONFIG_SERVER_USERNAME: config-admin
+      CONFIG_SERVER_PASSWORD: change-this-password
+      EUREKA_SERVER_URL: http://eureka-server:8761/eureka/
+      SPRING_PROFILES_ACTIVE: dev
+      APPLICATION_DB_URL: jdbc:postgresql://postgres:5432/application_sdb
+      APPLICATION_DB_USERNAME: ats
+      APPLICATION_DB_PASSWORD: ats
+    ports:
+      - "8083:8083"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      config-server:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+      job-service:
+        condition: service_started
+      candidate-service:
+        condition: service_started
+    restart: on-failure
+
+  cv-parse-service:
+    build:
+      context: .
+      args:
+        SERVICE_MODULE: services/cv-parse-service
+        SERVICE_ARTIFACT: cv-parse-service
+    environment:
+      CONFIG_SERVER_URL: http://config-server:8888
+      CONFIG_SERVER_USERNAME: config-admin
+      CONFIG_SERVER_PASSWORD: change-this-password
+      EUREKA_SERVER_URL: http://eureka-server:8761/eureka/
+      SPRING_PROFILES_ACTIVE: dev
+      CV_PARSE_MODE: simulated
+    ports:
+      - "8085:8085"
+    depends_on:
+      config-server:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+    restart: on-failure
+
+  api-gateway:
+    # Public entry point for authentication and request routing.
+    build:
+      context: .
+      args:
+        SERVICE_MODULE: infras/api-gateway
+        SERVICE_ARTIFACT: api-gateway
+    environment:
+      CONFIG_SERVER_URL: http://config-server:8888
+      CONFIG_SERVER_USERNAME: config-admin
+      CONFIG_SERVER_PASSWORD: change-this-password
+      EUREKA_SERVER_URL: http://eureka-server:8761/eureka/
+      SPRING_PROFILES_ACTIVE: dev
+      # Issuer is visible from the host; JWK endpoint is reached inside Docker.
+      APP_OIDC_ISSUER: http://localhost:${KEYCLOAK_PORT:-8180}/realms/ats
+      APP_OIDC_JWK_SET_URI: http://keycloak:8080/realms/ats/protocol/openid-connect/certs
+      APP_CLIENT_ID: ats-postman
+    ports:
+      - "8080:8080"
+    depends_on:
+      config-server:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+      keycloak:
+        condition: service_started
+    restart: on-failure
+
+volumes:
+  # Named volumes preserve local data across container recreation.
+  postgres-data:
+  rabbitmq-data:
+  kafka-data:
+  minio-data:
+  redis-data:

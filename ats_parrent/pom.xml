@@ -9,7 +9,9 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
+        <module>shared/common-web</module>
         <module>services/job-service</module>
+        <module>services/cv-parse-service</module>
         <module>services/candidate-service</module>
         <module>services/application-service</module>
         <module>infras/api-gateway</module>
