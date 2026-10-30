@@ -4,34 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="882a03bc-0f46-4826-89f6-60ce51c65e7b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/data_sources_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/data_sources_history.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e53b196d-c1e0-4026-ae2e-e23a368f5c4b.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e53b196d-c1e0-4026-ae2e-e23a368f5c4b/storage_v2/_src_/database/job_sdb.r2BQqg.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e53b196d-c1e0-4026-ae2e-e23a368f5c4b/storage_v2/_src_/database/job_sdb.r2BQqg/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e53b196d-c1e0-4026-ae2e-e23a368f5c4b/storage_v2/_src_/database/job_sdb.r2BQqg/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e53b196d-c1e0-4026-ae2e-e23a368f5c4b/storage_v2/_src_/database/job_sdb.r2BQqg/schema/public.abK9xQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/db-forest-config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/db-forest-config.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config-repo/candidate-service.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-repo/candidate-service.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config-repo/cv-parse-service.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-repo/cv-parse-service.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/application-service/src/main/java/fu/ats/service/ApplicationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/services/application-service/src/main/java/fu/ats/service/ApplicationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/candidate-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/services/candidate-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/candidate-service/src/main/java/fu/ats/api/api.md" beforeDir="false" afterPath="$PROJECT_DIR$/services/candidate-service/src/main/java/fu/ats/api/api.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/candidate-service/src/main/java/fu/ats/api/dto/CandidateResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/services/candidate-service/src/main/java/fu/ats/api/dto/CandidateResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/candidate-service/src/main/java/fu/ats/api/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/services/candidate-service/src/main/java/fu/ats/api/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/candidate-service/src/main/java/fu/ats/api/rest/CandidateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/services/candidate-service/src/main/java/fu/ats/api/rest/CandidateController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/candidate-service/src/main/java/fu/ats/infrastructure/persistence/entity/CandidateEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/services/candidate-service/src/main/java/fu/ats/infrastructure/persistence/entity/CandidateEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/candidate-service/src/main/java/fu/ats/infrastructure/persistence/entity/CvEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/services/candidate-service/src/main/java/fu/ats/infrastructure/persistence/entity/CvEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/candidate-service/src/main/java/fu/ats/infrastructure/persistence/repository/CandidateJpaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/services/candidate-service/src/main/java/fu/ats/infrastructure/persistence/repository/CandidateJpaRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/cv-parse-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/services/cv-parse-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/job-service/src/main/java/fu/ats/entity/Department.java" beforeDir="false" afterPath="$PROJECT_DIR$/services/job-service/src/main/java/fu/ats/entity/Department.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/common-web/src/main/java/fu/ats/shared/commonweb/messaging/rabbitmq/CvParseCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/shared/common-web/src/main/java/fu/ats/shared/commonweb/messaging/rabbitmq/CvParseCommand.java" afterDir="false" />
-    </list>
+    <list default="true" id="882a03bc-0f46-4826-89f6-60ce51c65e7b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -65,61 +38,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000000000004" />
-      <entry key="MS500" value="1.0008121309554443" />
-      <entry key="S2" value="1.1688133584496554" />
-      <entry key="S5" value="1.492537157328518" />
-      <entry key="S10" value="1.7415025821134078" />
-      <entry key="S30" value="2.232663032819678" />
-      <entry key="S60" value="2.529553432265117" />
-      <entry key="M2" value="2.790803085407286" />
-      <entry key="M5" value="5.093627388367091" />
-      <entry key="M10" value="11.918888038178714" />
-      <entry key="M15" value="18.291885458180268" />
-      <entry key="M30" value="37.25282113789513" />
-      <entry key="H1" value="97.37157187402744" />
-      <entry key="H2" value="254.95665467370716" />
-      <entry key="H4" value="549.393584912118" />
-      <entry key="D1" value="2193.0863909789778" />
-      <entry key="W1" value="4041.1067774838075" />
+      <entry key="MS100" value="3.951294577158556E-4" />
+      <entry key="MS500" value="0.4951497062627182" />
+      <entry key="S2" value="4.141600802264467" />
+      <entry key="S5" value="10.739246968903696" />
+      <entry key="S10" value="17.449995324643734" />
+      <entry key="S30" value="25.777299084533503" />
+      <entry key="S60" value="28.669834402905906" />
+      <entry key="M2" value="30.275819175981677" />
+      <entry key="M5" value="31.295538536769904" />
+      <entry key="M10" value="31.64525202792761" />
+      <entry key="M15" value="31.762938014212626" />
+      <entry key="M30" value="31.881186429455422" />
+      <entry key="H1" value="31.945034304707264" />
+      <entry key="H2" value="33.67471480387471" />
+      <entry key="H4" value="76.80687782687872" />
+      <entry key="D1" value="1480.050842244032" />
+      <entry key="W1" value="3852.2421249028894" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="3.368943294802025E-128" />
-      <entry key="S5" value="1.0256826277576554E-51" />
-      <entry key="S10" value="3.232787258396762E-26" />
-      <entry key="S30" value="4.93818072181875E-9" />
-      <entry key="S60" value="1.9250669501894287E-4" />
-      <entry key="M2" value="0.059769460633789434" />
-      <entry key="M5" value="2.541292024922875" />
-      <entry key="M10" value="9.692758970763776" />
-      <entry key="M15" value="15.386706043223679" />
-      <entry key="M30" value="25.129906352094768" />
-      <entry key="H1" value="34.74719891755683" />
-      <entry key="H2" value="44.798853621172036" />
-      <entry key="H4" value="54.29024658660099" />
-      <entry key="D1" value="285.8085897843343" />
-      <entry key="W1" value="770.419948367537" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0" />
+      <entry key="S30" value="1.0" />
+      <entry key="S60" value="1.0" />
+      <entry key="M2" value="1.0" />
+      <entry key="M5" value="1.0" />
+      <entry key="M10" value="1.0" />
+      <entry key="M15" value="1.0" />
+      <entry key="M30" value="1.0000000385372076" />
+      <entry key="H1" value="1.001360706585393" />
+      <entry key="H2" value="1.2803426949091534" />
+      <entry key="H4" value="5.294701518443634" />
+      <entry key="D1" value="188.2594768130269" />
+      <entry key="W1" value="726.2612130728207" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.972654947412286" />
-      <entry key="MS500" value="0.9952733425684412" />
-      <entry key="S2" value="1.1669606226349096" />
-      <entry key="S5" value="1.491435929283381" />
-      <entry key="S10" value="1.7408029715626505" />
-      <entry key="S30" value="2.232310967557679" />
-      <entry key="S60" value="2.5295225896826334" />
-      <entry key="M2" value="2.848800966744585" />
-      <entry key="M5" value="7.598791683794658" />
-      <entry key="M10" value="21.53563702264004" />
-      <entry key="M15" value="33.59534317672186" />
-      <entry key="M30" value="62.31248179634477" />
-      <entry key="H1" value="132.0694594729498" />
-      <entry key="H2" value="299.7234877029184" />
-      <entry key="H4" value="603.664525669639" />
-      <entry key="D1" value="2478.8846956824136" />
-      <entry key="W1" value="4811.52328988742" />
+      <entry key="MS100" value="0.004772985010843382" />
+      <entry key="MS500" value="0.8255049739073933" />
+      <entry key="S2" value="4.888588296266742" />
+      <entry key="S5" value="11.621193576805572" />
+      <entry key="S10" value="18.38485582497369" />
+      <entry key="S30" value="26.75327543705085" />
+      <entry key="S60" value="29.657432736581136" />
+      <entry key="M2" value="31.269510883727914" />
+      <entry key="M5" value="32.29298802193721" />
+      <entry key="M10" value="32.643972114439066" />
+      <entry key="M15" value="32.762083694539484" />
+      <entry key="M30" value="32.88075878368733" />
+      <entry key="H1" value="32.94617910512422" />
+      <entry key="H2" value="34.95474998359973" />
+      <entry key="H4" value="82.0999978856746" />
+      <entry key="D1" value="1668.3035704389386" />
+      <entry key="W1" value="4578.500101934953" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -578,7 +551,7 @@
       <workItem from="1793026450550" duration="1196000" />
       <workItem from="1793152597005" duration="4061000" />
       <workItem from="1793162855256" duration="10723000" />
-      <workItem from="1793254611426" duration="12679000" />
+      <workItem from="1793254611426" duration="14110000" />
     </task>
     <servers />
   </component>
