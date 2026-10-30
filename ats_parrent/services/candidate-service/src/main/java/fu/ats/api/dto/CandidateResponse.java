@@ -25,5 +25,6 @@ public class CandidateResponse {
     private String utmCampaign;
     private boolean duplicate;
     private Long activeCvId;
+    private CvResponse activeCv;
     private ParsedCvDataResponse parsedCvData;
 }

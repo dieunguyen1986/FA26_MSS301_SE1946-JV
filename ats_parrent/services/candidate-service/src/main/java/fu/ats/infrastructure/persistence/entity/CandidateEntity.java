@@ -66,22 +66,9 @@ public class CandidateEntity {
     @Builder.Default
     private boolean duplicate = false;
 
-    /**
-     * Points to the candidate's "current/active" CV (cvs.id).
-     * Kept as a plain FK column (Long), NOT a JPA @OneToOne, because the
-     * owning side of the Candidate 1---N Cv relationship is already
-     * Cv.candidate_id below. Mapping this as an object reference too would
-     * create a second, conflicting association path between the same tables.
-     */
     @Column(name = "cv_file_id")
     private Long cvFileId;
 
-    /**
-     * Curated/normalized parse result, derived from the raw payload
-     * cv-parser-service writes into CvEntity.parsedData for the active CV.
-     * candidate-service does not parse CVs itself — it only consumes and
-     * reshapes the result (e.g. via an event listener/callback handler).
-     */
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "parsed_cv_data", columnDefinition = "jsonb")
     private ParsedCvData parsedCvData;

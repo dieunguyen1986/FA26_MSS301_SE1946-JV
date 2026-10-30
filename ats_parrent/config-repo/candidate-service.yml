@@ -1,7 +1,24 @@
 server:
   port: ${CANDIDATE_SERVICE_PORT:8082}
 
+candidate:
+  storage:
+    endpoint: ${MINIO_ENDPOINT:http://minio:9000}
+    access-key: ${MINIO_ACCESS_KEY}
+    secret-key: ${MINIO_SECRET_KEY}
+    bucket: ${MINIO_BUCKET:ats-cv}
+    max-file-size: ${CV_MAX_FILE_SIZE:10MB}
+
 spring:
+  rabbitmq:
+    host: ${RABBITMQ_HOST:rabbitmq}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+  servlet:
+    multipart:
+      max-file-size: ${CV_MAX_FILE_SIZE:10MB}
+      max-request-size: ${CV_MAX_FILE_SIZE:10MB}
   datasource:
     url: ${CANDIDATE_DB_URL:jdbc:postgresql://localhost:5432/candidate_sdb}
     username: ${CANDIDATE_DB_USERNAME}

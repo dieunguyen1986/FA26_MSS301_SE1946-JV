@@ -7,8 +7,6 @@ import java.util.UUID;
 /**
  * RabbitMQ command asking cv-parse-service to parse one stored CV.
  *
- * <p>Only metadata is transported. The original CV binary remains in object
- * storage and is addressed by filePath.</p>
  */
 public record CvParseCommand(
         UUID messageId,

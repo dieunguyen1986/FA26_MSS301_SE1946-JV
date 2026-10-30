@@ -62,7 +62,10 @@ public class ApplicationServiceImpl implements ApplicationService {
         application.setAppliedAt(OffsetDateTime.now());
         application.setPipelineStage(pipelineStageRepository.findByDefaultStage(true));
 
-        return ApplicationResponse.from(applicationRepository.save(application));
+        Application saved = applicationRepository.save(application);
+
+        // Publish message
+        return ApplicationResponse.from(saved);
     }
 
     private PipelineStage getDefaultStage() {

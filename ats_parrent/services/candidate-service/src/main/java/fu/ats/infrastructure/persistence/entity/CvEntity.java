@@ -56,7 +56,10 @@ public class CvEntity{
     @Column(name = "file_path", length = 1000)
     private String filePath;
 
-    @Column(name = "file_type", length = 50)
+    @Column(name = "original_file_name", length = 255)
+    private String originalFileName;
+
+    @Column(name = "file_type", length = 255)
     private String fileType;
 
     @Column(name = "size_bytes")

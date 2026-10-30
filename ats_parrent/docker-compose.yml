@@ -1,32 +1,28 @@
-# Local development stack: infrastructure, discovery, gateway and services.
 name: talenthub
 
 services:
   postgres:
-    # One PostgreSQL instance contains a separate database for each service.
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: ats
-      POSTGRES_PASSWORD: ats
-      POSTGRES_DB: postgres
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
     ports:
       - "5433:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      # Initialization scripts run only when the data volume is empty.
       - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ats -d postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB:-postgres}"]
       interval: 5s
       timeout: 5s
       retries: 10
 
   rabbitmq:
-    # 5672 is AMQP; 15672 is the management console.
     image: rabbitmq:3.13-management-alpine
     environment:
-      RABBITMQ_DEFAULT_USER: ats
-      RABBITMQ_DEFAULT_PASS: ats
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:?RABBITMQ_USERNAME is required}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?RABBITMQ_PASSWORD is required}
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -38,77 +34,35 @@ services:
       timeout: 5s
       retries: 10
 
-  kafka:
-    # Single-node KRaft mode keeps local setup independent of ZooKeeper.
-    image: apache/kafka:3.9.0
-    environment:
-      KAFKA_NODE_ID: 1
-      KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
-      # Other containers use kafka:9092 as the broker address.
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-    ports:
-      - "9092:9092"
-    volumes:
-      - kafka-data:/var/lib/kafka/data
-
   minio:
-    # 9000 is the S3 API; 9001 is the web console.
     image: minio/minio:latest
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: minio123
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:?MINIO_ACCESS_KEY is required}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:?MINIO_SECRET_KEY is required}
     ports:
       - "9000:9000"
       - "9001:9001"
     volumes:
       - minio-data:/data
-
-  mailhog:
-    # SMTP is exposed on 1025 and the mail UI on 8025.
-    image: mailhog/mailhog:v1.0.1
-    ports:
-      - "1025:1025"
-      - "8025:8025"
-
-  redis:
-    # Redis is used as a local shared cache.
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 3s
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
       retries: 10
 
   keycloak:
-    # Import the training realm with users and application roles.
     image: quay.io/keycloak/keycloak:26.8.0
     command: ["start-dev", "--import-realm"]
     environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
-      KC_HOSTNAME_STRICT_HTTPS: "false"
-      KC_HTTP_ENABLED: "true"
-      KC_PROXY_HEADERS: xforwarded
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME:?KEYCLOAK_ADMIN_USERNAME is required}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?KEYCLOAK_ADMIN_PASSWORD is required}
     ports:
-      # Override KEYCLOAK_PORT when the default host port is occupied.
       - "${KEYCLOAK_PORT:-8180}:8080"
     volumes:
       - ./docker/keycloak/ats-realm.json:/opt/keycloak/data/import/ats-realm.json:ro
+
   config-server:
-    # Native profile reads configuration from the mounted config-repo folder.
     build:
       context: .
       args:
@@ -117,17 +71,15 @@ services:
     environment:
       CONFIG_SERVER_PROFILE: native
       CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS: file:/config-repo
-      CONFIG_SERVER_USERNAME: config-admin
-      CONFIG_SERVER_PASSWORD: change-this-password
+      CONFIG_SERVER_USERNAME: ${CONFIG_SERVER_USERNAME:?CONFIG_SERVER_USERNAME is required}
+      CONFIG_SERVER_PASSWORD: ${CONFIG_SERVER_PASSWORD:?CONFIG_SERVER_PASSWORD is required}
     ports:
       - "8888:8888"
     volumes:
       - ./config-repo:/config-repo:ro
-    # Restart while dependent services are still becoming available.
     restart: on-failure
 
   eureka-server:
-    # Service registry used by the gateway and business services.
     build:
       context: .
       args:
@@ -135,8 +87,8 @@ services:
         SERVICE_ARTIFACT: eureka-server
     environment:
       CONFIG_SERVER_URL: http://config-server:8888
-      CONFIG_SERVER_USERNAME: config-admin
-      CONFIG_SERVER_PASSWORD: change-this-password
+      CONFIG_SERVER_USERNAME: ${CONFIG_SERVER_USERNAME:?CONFIG_SERVER_USERNAME is required}
+      CONFIG_SERVER_PASSWORD: ${CONFIG_SERVER_PASSWORD:?CONFIG_SERVER_PASSWORD is required}
       SPRING_PROFILES_ACTIVE: dev
       EUREKA_HOSTNAME: eureka-server
     ports:
@@ -146,7 +98,6 @@ services:
     restart: on-failure
 
   job-service:
-    # Business services use Docker DNS names for internal dependencies.
     build:
       context: .
       args:
@@ -154,17 +105,16 @@ services:
         SERVICE_ARTIFACT: job-service
     environment:
       CONFIG_SERVER_URL: http://config-server:8888
-      CONFIG_SERVER_USERNAME: config-admin
-      CONFIG_SERVER_PASSWORD: change-this-password
+      CONFIG_SERVER_USERNAME: ${CONFIG_SERVER_USERNAME:?CONFIG_SERVER_USERNAME is required}
+      CONFIG_SERVER_PASSWORD: ${CONFIG_SERVER_PASSWORD:?CONFIG_SERVER_PASSWORD is required}
       EUREKA_SERVER_URL: http://eureka-server:8761/eureka/
       SPRING_PROFILES_ACTIVE: dev
       JOB_DB_URL: jdbc:postgresql://postgres:5432/job_sdb
-      JOB_DB_USERNAME: ats
-      JOB_DB_PASSWORD: ats
+      JOB_DB_USERNAME: ${JOB_DB_USERNAME:?JOB_DB_USERNAME is required}
+      JOB_DB_PASSWORD: ${JOB_DB_PASSWORD:?JOB_DB_PASSWORD is required}
     ports:
       - "8081:8081"
     depends_on:
-      # Wait for the database, then start after platform services exist.
       postgres:
         condition: service_healthy
       config-server:
@@ -181,22 +131,35 @@ services:
         SERVICE_ARTIFACT: candidate-service
     environment:
       CONFIG_SERVER_URL: http://config-server:8888
-      CONFIG_SERVER_USERNAME: config-admin
-      CONFIG_SERVER_PASSWORD: change-this-password
+      CONFIG_SERVER_USERNAME: ${CONFIG_SERVER_USERNAME:?CONFIG_SERVER_USERNAME is required}
+      CONFIG_SERVER_PASSWORD: ${CONFIG_SERVER_PASSWORD:?CONFIG_SERVER_PASSWORD is required}
       EUREKA_SERVER_URL: http://eureka-server:8761/eureka/
       SPRING_PROFILES_ACTIVE: dev
       CANDIDATE_DB_URL: jdbc:postgresql://postgres:5432/candidate_sdb
-      CANDIDATE_DB_USERNAME: ats
-      CANDIDATE_DB_PASSWORD: ats
+      CANDIDATE_DB_USERNAME: ${CANDIDATE_DB_USERNAME:?CANDIDATE_DB_USERNAME is required}
+      CANDIDATE_DB_PASSWORD: ${CANDIDATE_DB_PASSWORD:?CANDIDATE_DB_PASSWORD is required}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME:?RABBITMQ_USERNAME is required}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:?RABBITMQ_PASSWORD is required}
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:?MINIO_ACCESS_KEY is required}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:?MINIO_SECRET_KEY is required}
+      MINIO_BUCKET: ${MINIO_BUCKET:-ats-cv}
+      CV_MAX_FILE_SIZE: ${CV_MAX_FILE_SIZE:-10MB}
     ports:
       - "8082:8082"
     depends_on:
       postgres:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
       config-server:
         condition: service_started
       eureka-server:
         condition: service_started
+      minio:
+        condition: service_healthy
     restart: on-failure
 
   application-service:
@@ -207,13 +170,13 @@ services:
         SERVICE_ARTIFACT: application-service
     environment:
       CONFIG_SERVER_URL: http://config-server:8888
-      CONFIG_SERVER_USERNAME: config-admin
-      CONFIG_SERVER_PASSWORD: change-this-password
+      CONFIG_SERVER_USERNAME: ${CONFIG_SERVER_USERNAME:?CONFIG_SERVER_USERNAME is required}
+      CONFIG_SERVER_PASSWORD: ${CONFIG_SERVER_PASSWORD:?CONFIG_SERVER_PASSWORD is required}
       EUREKA_SERVER_URL: http://eureka-server:8761/eureka/
       SPRING_PROFILES_ACTIVE: dev
       APPLICATION_DB_URL: jdbc:postgresql://postgres:5432/application_sdb
-      APPLICATION_DB_USERNAME: ats
-      APPLICATION_DB_PASSWORD: ats
+      APPLICATION_DB_USERNAME: ${APPLICATION_DB_USERNAME:?APPLICATION_DB_USERNAME is required}
+      APPLICATION_DB_PASSWORD: ${APPLICATION_DB_PASSWORD:?APPLICATION_DB_PASSWORD is required}
     ports:
       - "8083:8083"
     depends_on:
@@ -237,11 +200,19 @@ services:
         SERVICE_ARTIFACT: cv-parse-service
     environment:
       CONFIG_SERVER_URL: http://config-server:8888
-      CONFIG_SERVER_USERNAME: config-admin
-      CONFIG_SERVER_PASSWORD: change-this-password
+      CONFIG_SERVER_USERNAME: ${CONFIG_SERVER_USERNAME:?CONFIG_SERVER_USERNAME is required}
+      CONFIG_SERVER_PASSWORD: ${CONFIG_SERVER_PASSWORD:?CONFIG_SERVER_PASSWORD is required}
       EUREKA_SERVER_URL: http://eureka-server:8761/eureka/
       SPRING_PROFILES_ACTIVE: dev
       CV_PARSE_MODE: simulated
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME:?RABBITMQ_USERNAME is required}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:?RABBITMQ_PASSWORD is required}
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:?MINIO_ACCESS_KEY is required}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:?MINIO_SECRET_KEY is required}
+      MINIO_BUCKET: ${MINIO_BUCKET:-ats-cv}
     ports:
       - "8085:8085"
     depends_on:
@@ -249,10 +220,13 @@ services:
         condition: service_started
       eureka-server:
         condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
     restart: on-failure
 
   api-gateway:
-    # Public entry point for authentication and request routing.
     build:
       context: .
       args:
@@ -260,14 +234,13 @@ services:
         SERVICE_ARTIFACT: api-gateway
     environment:
       CONFIG_SERVER_URL: http://config-server:8888
-      CONFIG_SERVER_USERNAME: config-admin
-      CONFIG_SERVER_PASSWORD: change-this-password
+      CONFIG_SERVER_USERNAME: ${CONFIG_SERVER_USERNAME:?CONFIG_SERVER_USERNAME is required}
+      CONFIG_SERVER_PASSWORD: ${CONFIG_SERVER_PASSWORD:?CONFIG_SERVER_PASSWORD is required}
       EUREKA_SERVER_URL: http://eureka-server:8761/eureka/
       SPRING_PROFILES_ACTIVE: dev
-      # Issuer is visible from the host; JWK endpoint is reached inside Docker.
       APP_OIDC_ISSUER: http://localhost:${KEYCLOAK_PORT:-8180}/realms/ats
       APP_OIDC_JWK_SET_URI: http://keycloak:8080/realms/ats/protocol/openid-connect/certs
-      APP_CLIENT_ID: ats-postman
+      APP_CLIENT_ID: ${APP_CLIENT_ID:-ats-postman}
     ports:
       - "8080:8080"
     depends_on:
@@ -280,9 +253,6 @@ services:
     restart: on-failure
 
 volumes:
-  # Named volumes preserve local data across container recreation.
   postgres-data:
   rabbitmq-data:
-  kafka-data:
   minio-data:
-  redis-data:

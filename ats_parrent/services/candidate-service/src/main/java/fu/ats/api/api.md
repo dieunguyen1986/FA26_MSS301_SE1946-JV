@@ -6,6 +6,53 @@ Base URL:
 /api/v1
 ```
 
+## 0. Tạo hồ sơ candidate và upload CV
+
+Tài khoản đăng nhập được quản lý bởi Keycloak. Candidate service chỉ tạo hồ sơ
+ứng viên dựa trên `X-User-ID` do API Gateway xác thực.
+
+### 0.1 Candidate tự đăng ký hồ sơ
+
+| Method | Endpoint |
+|---|---|
+| `POST` | `/api/v1/candidates/me` |
+
+Content type: `multipart/form-data`
+
+Form fields:
+
+```text
+fullName: Nguyen Van A
+source: WEBSITE
+utmSource: google
+utmMedium: organic
+utmCampaign: java-hiring
+file: candidate-cv.pdf
+```
+
+CV được lưu vào MinIO, metadata được lưu vào PostgreSQL và `parseStatus` bắt
+đầu từ `PENDING`. Sau đó candidate service gửi `CvParseCommand` dạng JSON đến
+exchange `ats.cv.exchange` với routing key `cv.parse`.
+
+### 0.2 Recruiter tạo hồ sơ candidate và upload CV
+
+| Method | Endpoint |
+|---|---|
+| `POST` | `/api/v1/candidates/recruiter` |
+
+Form fields giống endpoint candidate, bổ sung:
+
+```text
+candidateUserId: <Keycloak sub của candidate>
+file: candidate-cv.pdf
+```
+
+`candidateUserId` là UUID của tài khoản candidate trên Keycloak, không phải
+`X-User-ID` của recruiter.
+
+Các định dạng hiện hỗ trợ: PDF, DOC, DOCX và TXT. Kích thước mặc định tối đa
+là 10 MB, cấu hình qua `CV_MAX_FILE_SIZE` (ví dụ `20MB`).
+
 Các API dành cho candidate sử dụng `userId` lấy từ JWT/Keycloak `sub`. Client không được tự truyền hoặc thay đổi `userId` trong request body.
 
 ## 1. Candidate profile
